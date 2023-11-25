@@ -5,6 +5,7 @@ import { CreateTransactionDTO } from '@modules/transactions/dtos/CreateTransacti
 import { TransactionsRepositoryMethods } from '@modules/transactions/repositories/TransactionsRepositoryMethods'
 import { Transaction } from '../entities/Transaction'
 import { FindEqualTransactionDTO } from '@modules/transactions/dtos/FindEqualTransactionDTO'
+import { ListFiltersDTO } from '@modules/transactions/dtos/ListFiltersDTO'
 
 export class TransactionsRepository implements TransactionsRepositoryMethods {
   private client: Prisma.TransactionDelegate<DefaultArgs>
@@ -13,6 +14,26 @@ export class TransactionsRepository implements TransactionsRepositoryMethods {
     const prismaClient = new PrismaClient()
 
     this.client = prismaClient.transaction
+  }
+
+  public async list({
+    originType,
+    startDate,
+    endDate,
+  }: ListFiltersDTO): Promise<Transaction[]> {
+    endDate.setDate(endDate.getDate() + 1)
+
+    const transactionsList = await this.client.findMany({
+      where: {
+        origin_type: originType,
+        date: {
+          gte: startDate,
+          lte: endDate,
+        }
+      }
+    })
+
+    return transactionsList
   }
 
   public async findEqualTransaction({

@@ -21,6 +21,10 @@ export class ListTransactionsService {
     startDate,
     endDate,
   }: ServiceProps): Promise<Transaction[]> {
+    if (startDate > endDate) {
+      throw new Error('The start date must be less than the end date!')
+    }
+
     const transactionsList = await this.transactionsRepository.list({
       originType,
       startDate,

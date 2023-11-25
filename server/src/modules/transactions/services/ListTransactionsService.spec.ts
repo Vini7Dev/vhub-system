@@ -41,4 +41,14 @@ describe('ListTransactionsService', () => {
     expect(transactionsList[1].description).toBe(transactionsToCreate[3].description)
     expect(transactionsList[2].description).toBe(transactionsToCreate[5].description)
   })
+
+  it('should not be possible to list transactions with a start date greater than the end date', async () => {
+    await expect(
+      listTransactionsService.execute({
+        originType: 0,
+        startDate: new Date('2023/01/02'),
+        endDate: new Date('2023/01/01'),
+      })
+    ).rejects.toBeInstanceOf(Error)
+  })
 })

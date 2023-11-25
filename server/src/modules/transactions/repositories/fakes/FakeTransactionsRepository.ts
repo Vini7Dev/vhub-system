@@ -14,9 +14,9 @@ export class FakeTransactionsRepository implements TransactionsRepositoryMethods
     startDate,
   }: ListFiltersDTO): Promise<Transaction[]> {
     return this.transactions.filter(transaction => {
-      const isOriginType = typeof originType === 'undefined' || transaction.origin_type === originType
-      const isStartDate = typeof startDate === 'undefined' || transaction.date >= startDate
-      const isEndDate = typeof endDate === 'undefined' || transaction.date <= endDate
+      const isOriginType = transaction.origin_type === originType
+      const isStartDate = transaction.date >= startDate
+      const isEndDate = transaction.date <= endDate
 
       return isOriginType && isStartDate && isEndDate
     })
