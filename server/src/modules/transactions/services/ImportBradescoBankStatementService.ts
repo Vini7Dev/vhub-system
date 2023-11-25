@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { brDateStringToDate } from '@utils/brDateStringToDate'
+import { brDateStringToDate } from '@utils/dateHandlers'
 import { keepOnlyPriceNumbers } from '@utils/keepOnlyPriceNumbers'
 import { StorageProvider } from '@shared/container/providers/StorageProvider/models/StorageProvider'
 import { PDFReaderProvider } from '@shared/container/providers/PDFReaderProvider/models/PDFReaderProvider'
@@ -150,13 +150,13 @@ export class ImportBradescoBankStatementService {
 
     const content = await this.pdfReaderProvider.readPDF(filePath)
 
+    await this.storageProvider.deleteFile(file_name)
+
     const transactionRows = getTransactionRowsByPdfContent(content)
 
     const transactionByDateGrops = groupTransactionsByDate(transactionRows)
 
     const transactions = buildTransactionEntityByTransactionDateGroups(transactionByDateGrops)
-
-    await this.storageProvider.deleteFile(file_name)
 
     let totalOfTransactions = 0
 

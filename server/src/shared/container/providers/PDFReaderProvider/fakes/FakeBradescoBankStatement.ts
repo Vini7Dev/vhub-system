@@ -1,4 +1,4 @@
-export const BRADESCO_FAKE_STATEMENT = `
+export const FAKE_BRADESCO_BANK_STATEMENT = `
 Bradesco Celular
 
 Data: 25/11/2023 - 09h49

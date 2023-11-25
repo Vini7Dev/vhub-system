@@ -1,6 +1,7 @@
+import { Router } from 'express'
+
 import { multerUpload } from '@configs/upload'
 import { ImportBradescoBankStatementController } from '@modules/transactions/controllers/ImportBradescoBankStatementController'
-import { Router } from 'express'
 
 const importBradescoBankStatementController = new ImportBradescoBankStatementController()
 

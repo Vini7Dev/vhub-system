@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 
-import * as dateFormatter from '@utils/brDateStringToDate'
+import * as dateFormatter from '@utils/dateHandlers'
 
-import { BRADESCO_FAKE_STATEMENT } from '@shared/container/providers/PDFReaderProvider/fakes/FakeStatements'
+import { FAKE_BRADESCO_BANK_STATEMENT } from '@shared/container/providers/PDFReaderProvider/fakes/FakeBradescoBankStatement'
 import { StorageProvider } from '@shared/container/providers/StorageProvider/models/StorageProvider'
 import { FakeStorageProvider } from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider'
 import { PDFReaderProvider } from '@shared/container/providers/PDFReaderProvider/models/PDFReaderProvider'
@@ -32,7 +32,7 @@ describe('ImportBradescoBankStatementService', () => {
   it('should be able to import transactions from a pdf', async () => {
     const readPdfSpy = jest.spyOn(fakePDFReaderProvider, 'readPDF')
 
-    readPdfSpy.mockImplementationOnce(async () => BRADESCO_FAKE_STATEMENT)
+    readPdfSpy.mockImplementationOnce(async () => FAKE_BRADESCO_BANK_STATEMENT)
 
     const insertedCount = await importBradescoBankStatementService.execute({
       file_name: '__example__.pdf',
@@ -48,13 +48,13 @@ describe('ImportBradescoBankStatementService', () => {
 
     const readPdfSpy = jest.spyOn(fakePDFReaderProvider, 'readPDF')
 
-    readPdfSpy.mockImplementationOnce(async () => BRADESCO_FAKE_STATEMENT)
+    readPdfSpy.mockImplementationOnce(async () => FAKE_BRADESCO_BANK_STATEMENT)
 
     const firstInsertedCount = await importBradescoBankStatementService.execute({
       file_name: '__example__.pdf',
     })
 
-    readPdfSpy.mockImplementationOnce(async () => BRADESCO_FAKE_STATEMENT)
+    readPdfSpy.mockImplementationOnce(async () => FAKE_BRADESCO_BANK_STATEMENT)
 
     const secondInsertedCount = await importBradescoBankStatementService.execute({
       file_name: '__example__.pdf',
