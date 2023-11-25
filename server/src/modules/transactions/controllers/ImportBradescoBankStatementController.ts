@@ -10,7 +10,9 @@ export class ImportBradescoBankStatementController {
 
     const importBradescoBankStatementService = container.resolve(ImportBradescoBankStatementService)
 
-    const insertedCount = await importBradescoBankStatementService.execute({ file })
+    const insertedCount = await importBradescoBankStatementService.execute({
+      file_name: file?.filename,
+    })
 
     return response.json({ insertedCount }).status(HTTP_STATUS_CODES.created)
   }
