@@ -7,8 +7,11 @@
     "module": "commonjs",
     "baseUrl": "./src",
     "paths": {
+      "@configs/*": ["configs/*"],
       "@modules/*": ["modules/*"],
-      "@shared/*": ["shared/*"]
+      "@shared/*": ["shared/*"],
+      "@uploads/*": ["uploads/*"],
+      "@utils/*": ["utils/*"]
     },
     "resolveJsonModule": true,
     "sourceMap": true,

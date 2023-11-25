@@ -1,9 +1,11 @@
+import 'reflect-metadata'
+
 import express from 'express'
 
+import { SERVER_PORT, SERVER_URL } from '@utils/constants'
 import { appRoutes } from './routes/index.routes'
 
-const SERVER_PORT = 3333
-const SERVER_URL = `http://localhost:${SERVER_PORT}`
+import '../../container'
 
 const app = express()
 

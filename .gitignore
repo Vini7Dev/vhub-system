@@ -101,6 +101,8 @@ dist
 .vuepress/dist
 
 # vuepress v2.x temp and cache directory
+tmp
+temp
 .temp
 .cache
 
@@ -128,3 +130,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Uploads folder
+uploads
+upload
