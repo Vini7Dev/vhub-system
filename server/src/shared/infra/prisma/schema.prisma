@@ -15,5 +15,8 @@ model Transaction {
   description String
   value       Int
   date        DateTime
+  origin_type Int
   created_at  DateTime  @default(now())
+
+  @@map("transactions")
 }

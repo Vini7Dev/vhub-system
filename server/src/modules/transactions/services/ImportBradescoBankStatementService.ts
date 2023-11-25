@@ -1,8 +1,11 @@
 import { inject, injectable } from 'tsyringe'
 
+import { brDateStringToDate } from '@utils/brDateStringToDate'
+import { keepOnlyPriceNumbers } from '@utils/keepOnlyPriceNumbers'
 import { StorageProvider } from '@shared/container/providers/StorageProvider/models/StorageProvider'
 import { PDFReaderProvider } from '@shared/container/providers/PDFReaderProvider/models/PDFReaderProvider'
-import { keepOnlyPriceNumbers } from '@utils/keepOnlyPriceNumbers'
+import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
+import { TransactionOrigin } from '../infra/prisma/entities/Transaction'
 
 interface ServiceProps {
   file_name?: string
@@ -10,6 +13,12 @@ interface ServiceProps {
 
 interface TransactionDateGroups {
   [date: string]: string[]
+}
+
+interface TransactionProps {
+  date: string
+  description: string
+  value: number
 }
 
 const groupTransactionsByDate = (transactionRows: string[]) => {
@@ -76,8 +85,7 @@ const buildTransactionEntityByTransactionDateGroups = (
 ) => {
   const INVESTIMENTS_ROW_REGEXP = /^(RESGATE DE INVESTIMENTOS|APLICACAO INVESTIMENTO)/
 
-  const transactionEntities: unknown[] = []
-  const created_at = new Date()
+  const transactionEntities: TransactionProps[] = []
 
   for (const date of Object.keys(transactionDateGrups)) {
     const transactionRows = transactionDateGrups[date]
@@ -96,8 +104,7 @@ const buildTransactionEntityByTransactionDateGroups = (
       transactionEntities.push({
         date,
         description,
-        value,
-        created_at
+        value
       })
     }
 
@@ -116,7 +123,6 @@ const buildTransactionEntityByTransactionDateGroups = (
         date,
         description,
         value,
-        created_at
       })
     }
   }
@@ -127,6 +133,9 @@ const buildTransactionEntityByTransactionDateGroups = (
 @injectable()
 export class ImportBradescoBankStatementService {
   constructor (
+    @inject('TransactionsRepository')
+    private transactionsRepository: TransactionsRepositoryMethods,
+
     @inject('StorageProvider')
     private storageProvider: StorageProvider,
 
@@ -145,10 +154,29 @@ export class ImportBradescoBankStatementService {
 
     const transactionByDateGrops = groupTransactionsByDate(transactionRows)
 
-    const transactionEntities = buildTransactionEntityByTransactionDateGroups(transactionByDateGrops)
+    const transactions = buildTransactionEntityByTransactionDateGroups(transactionByDateGrops)
 
     await this.storageProvider.deleteFile(file_name)
 
-    return transactionEntities.length
+    let totalOfTransactions = 0
+
+    for (const transaction of transactions) {
+      const transactionData = {
+        date: brDateStringToDate(transaction.date),
+        description: transaction.description,
+        value: transaction.value,
+        origin_type: TransactionOrigin['Bradesco-CP/CC']
+      }
+
+      const equalTransaction = await this.transactionsRepository.findEqualTransaction(transactionData)
+
+      if (equalTransaction) continue
+
+      await this.transactionsRepository.create(transactionData)
+
+      totalOfTransactions += 1
+    }
+
+    return totalOfTransactions
   }
 }
