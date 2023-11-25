@@ -1,5 +1,9 @@
 import { Router } from 'express'
 
+import { TransactionsController } from '@modules/transactions/controllers/TransactionsController'
+
+const transactionsController = new TransactionsController()
+
 export const transactionRoutes = Router()
 
-transactionRoutes.get('/', (_, res) => res.json({ message: 'HELLO WORLD!' }))
+transactionRoutes.get('/', transactionsController.index)

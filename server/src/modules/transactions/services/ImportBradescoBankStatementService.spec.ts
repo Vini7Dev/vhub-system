@@ -16,7 +16,7 @@ let fakeStorageProvider: StorageProvider
 let fakePDFReaderProvider: PDFReaderProvider
 let importBradescoBankStatementService: ImportBradescoBankStatementService
 
-describe('Import Bradesco Bank Statement', () => {
+describe('ImportBradescoBankStatementService', () => {
   beforeEach(() => {
     fakeTransactionsRepository = new FakeTransactionsRepository()
     fakeStorageProvider = new FakeStorageProvider()
