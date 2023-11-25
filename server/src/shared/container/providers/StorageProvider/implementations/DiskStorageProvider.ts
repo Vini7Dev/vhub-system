@@ -12,7 +12,7 @@ export class DiskStorageProvider implements StorageProvider {
       path.resolve(uploadConfig.uploadsFolder, file)
     )
 
-    return file
+    return `${uploadConfig.uploadsFolder}/${file}`
   }
 
   public async deleteFile(file: string): Promise<void> {
