@@ -76,8 +76,6 @@ const buildTransactionEntityByTransactionDateGroups = (
 ) => {
   const INVESTIMENTS_ROW_REGEXP = /^(RESGATE DE INVESTIMENTOS|APLICACAO INVESTIMENTO)/
 
-  const IGNORE_PAYMENT_OF_CREDIT_CART_REGEXP = /.*\sNU$/
-
   const transactionEntities: unknown[] = []
   const created_at = new Date()
 
@@ -108,10 +106,6 @@ const buildTransactionEntityByTransactionDateGroups = (
     )
 
     for (let i = 0; i < commonTransactionRows.length; i += 3) {
-      if (IGNORE_PAYMENT_OF_CREDIT_CART_REGEXP.test(commonTransactionRows[i+1])) {
-        continue
-      }
-
       const description = `${commonTransactionRows[i]} ${commonTransactionRows[i+1]}`
 
       const [, debitValue, creditString] = commonTransactionRows[i+2].split(' ')
