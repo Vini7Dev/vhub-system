@@ -9,3 +9,11 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Transaction {
+  id          Int       @id @default(autoincrement())
+  description String
+  value       Int
+  date        DateTime
+  created_at  DateTime  @default(now())
+}

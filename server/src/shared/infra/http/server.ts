@@ -1,14 +1,16 @@
 import express from 'express'
 
+import { appRoutes } from './routes/index.routes'
+
 const SERVER_PORT = 3333
 const SERVER_URL = `http://localhost:${SERVER_PORT}`
 
-const server = express()
+const app = express()
 
-server.use(express.json())
+app.use(express.json())
 
-server.get('/', (_, res) => res.json({ message: 'HELLO WORLD!' }))
+app.use('/v1', appRoutes)
 
-server.listen(SERVER_PORT, () => {
-  console.log(`===> Server started on ${SERVER_URL}`)
+app.listen(SERVER_PORT, () => {
+  console.log(`===> Server running on ${SERVER_URL}`)
 })
