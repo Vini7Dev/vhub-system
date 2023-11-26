@@ -22,3 +22,20 @@ export const convertBrMonthToMonthNumber = (brMonth: string) => {
 
   return String(monthNumber).padStart(2, '0')
 }
+
+export const getMonthGroup = (date: Date) => {
+  return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
+}
+
+export const removeMonthsOfDate = (date: Date, numberOfMonths: number) => {
+  return new Date(date.setMonth(date.getMonth() - numberOfMonths + 1))
+}
+
+export const setDateToFistDayOfMonth = (date: Date) => {
+  date.setDate(1)
+  date.setHours(0)
+  date.setMinutes(0)
+  date.setMilliseconds(0)
+
+  return date
+}

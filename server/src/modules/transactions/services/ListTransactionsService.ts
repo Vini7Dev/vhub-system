@@ -2,7 +2,6 @@ import { inject, injectable } from 'tsyringe'
 
 import { Transaction, TransactionOrigin } from '../infra/prisma/entities/Transaction'
 import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
-import { isUndefined } from '@utils/isUndefined'
 
 interface ServiceProps {
   originType: TransactionOrigin
@@ -22,7 +21,7 @@ export class ListTransactionsService {
     startDate,
     endDate,
   }: ServiceProps): Promise<Transaction[]> {
-    if (isUndefined(originType) || isUndefined(startDate) || isUndefined(endDate)) {
+    if (originType === undefined || startDate === undefined || endDate === undefined) {
       throw new Error('You must provide all filters!')
     }
 

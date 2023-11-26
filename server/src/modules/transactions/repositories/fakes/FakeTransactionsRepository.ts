@@ -3,8 +3,6 @@ import { TransactionsRepositoryMethods } from '../TransactionsRepositoryMethods'
 import { Transaction } from '../../infra/prisma/entities/Transaction'
 import { FindEqualTransactionDTO } from '@modules/transactions/dtos/FindEqualTransactionDTO'
 import { ListFiltersDTO } from '@modules/transactions/dtos/ListFiltersDTO'
-import { isUndefined } from '@utils/isUndefined'
-
 
 export class FakeTransactionsRepository implements TransactionsRepositoryMethods {
   private transactions: Transaction[] = []
@@ -15,9 +13,9 @@ export class FakeTransactionsRepository implements TransactionsRepositoryMethods
     startDate,
   }: ListFiltersDTO): Promise<Transaction[]> {
     return this.transactions.filter(transaction => {
-      const isOriginType = isUndefined(originType) || transaction.origin_type === originType
-      const isStartDate = isUndefined(startDate) || transaction.date >= startDate!
-      const isEndDate = isUndefined(endDate) || transaction.date <= endDate!
+      const isOriginType = originType === undefined || transaction.origin_type === originType
+      const isStartDate = startDate === undefined || transaction.date >= startDate!
+      const isEndDate = endDate === undefined || transaction.date <= endDate!
 
       return isOriginType && isStartDate && isEndDate
     })
