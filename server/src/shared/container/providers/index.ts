@@ -4,9 +4,9 @@ import { DiskStorageProvider } from './StorageProvider/implementations/DiskStora
 import { StorageProvider } from './StorageProvider/models/StorageProvider'
 import { PDFReaderProvider } from './PDFReaderProvider/models/PDFReaderProvider'
 import { Pdf2HtmlProvider } from './PDFReaderProvider/implementations/Pdf2HtmlProvider'
-import { ImportExportProvider } from './ImportExportProvider/models/ImportExportProvider'
-import { CSVImportExportProvider } from './ImportExportProvider/implementations/CSVImportExportProvider'
+import { ExportProvider } from './ExportProvider/models/ExportProvider'
+import { CSVExportProvider } from './ExportProvider/implementations/CSVExportProvider'
 
 container.registerSingleton<StorageProvider>('StorageProvider', DiskStorageProvider)
 container.registerSingleton<PDFReaderProvider>('PDFReaderProvider', Pdf2HtmlProvider)
-container.registerSingleton<ImportExportProvider>('ImportExportProvider', CSVImportExportProvider)
+container.registerSingleton<ExportProvider>('ExportProvider', CSVExportProvider)
