@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata'
 
 import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
@@ -25,7 +26,7 @@ describe('ListTransactionsService', () => {
         value: 1000,
       }
 
-      fakeTransactionsRepository.create(transaction)
+      await fakeTransactionsRepository.create(transaction)
 
       transactionsToCreate.push(transaction)
     }
@@ -42,13 +43,36 @@ describe('ListTransactionsService', () => {
     expect(transactionsList[2].description).toBe(transactionsToCreate[5].description)
   })
 
-  it('should not be possible to list transactions with a start date greater than the end date', async () => {
+  it('should not be able to list transactions with a start date greater than the end date', async () => {
     await expect(
       listTransactionsService.execute({
         originType: 0,
         startDate: new Date('2023/01/02'),
         endDate: new Date('2023/01/01'),
       })
+    ).rejects.toBeInstanceOf(Error)
+  })
+
+  it('should not be able to list transactions without filters', async () => {
+    await expect(
+      listTransactionsService.execute({
+        startDate: new Date('2023/01/02'),
+        endDate: new Date('2023/01/01'),
+      } as any)
+    ).rejects.toBeInstanceOf(Error)
+
+    await expect(
+      listTransactionsService.execute({
+        originType: 0,
+        endDate: new Date('2023/01/01'),
+      } as any)
+    ).rejects.toBeInstanceOf(Error)
+
+    await expect(
+      listTransactionsService.execute({
+        originType: 0,
+        startDate: new Date('2023/01/02'),
+      } as any)
     ).rejects.toBeInstanceOf(Error)
   })
 })

@@ -21,17 +21,18 @@ export class TransactionsRepository implements TransactionsRepositoryMethods {
     startDate,
     endDate,
   }: ListFiltersDTO): Promise<Transaction[]> {
-    endDate.setDate(endDate.getDate() + 1)
+    const filters = { date: {} }
 
-    const transactionsList = await this.client.findMany({
-      where: {
-        origin_type: originType,
-        date: {
-          gte: startDate,
-          lte: endDate,
-        }
-      }
-    })
+    if (originType) Object.assign(filters, { origin_type: originType })
+
+    if (startDate) Object.assign(filters.date, { gte: startDate })
+
+    if (endDate) {
+      endDate.setDate(endDate.getDate() + 1)
+      Object.assign(filters.date, { lte: endDate })
+    }
+
+    const transactionsList = await this.client.findMany({ where: filters })
 
     return transactionsList
   }
