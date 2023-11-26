@@ -3,10 +3,10 @@ import crypto from 'crypto'
 import { createObjectCsvWriter } from 'csv-writer'
 
 import { MULTER_TEMP_FOLDER } from '@utils/constants'
-import { ExportProvider } from '../models/ExportProvider'
+import { ImportExportProvider } from '../models/ImportExportProvider'
 import { ExportDTO } from '../dtos/ExportDTO'
 
-export class CSVExportProvider implements ExportProvider {
+export class CSVImportExportProvider implements ImportExportProvider {
   public async export({
     headers,
     payloads,

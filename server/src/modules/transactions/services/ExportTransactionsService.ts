@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { ExportProvider } from '@shared/container/providers/ExportProvider/models/ExportProvider'
+import { ImportExportProvider } from '@shared/container/providers/ImportExportProvider/models/ImportExportProvider'
 import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
 import { TransactionOrigin } from '../infra/prisma/entities/Transaction'
 
@@ -25,8 +25,8 @@ export class ExportTransactionsService {
     @inject('TransactionsRepository')
     private transactionsRepository: TransactionsRepositoryMethods,
 
-    @inject('ExportProvider')
-    private exportProvider: ExportProvider,
+    @inject('ImportExportProvider')
+    private exportProvider: ImportExportProvider,
   ) {}
 
   public async execute({

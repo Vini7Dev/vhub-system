@@ -1,5 +1,5 @@
 import { ExportDTO } from '../dtos/ExportDTO'
 
-export interface ExportProvider {
+export interface ImportExportProvider {
   export(content: ExportDTO): Promise<string>
 }

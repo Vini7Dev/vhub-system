@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata'
 
-import { ExportProvider } from '@shared/container/providers/ExportProvider/models/ExportProvider'
+import { ImportExportProvider } from '@shared/container/providers/ImportExportProvider/models/ImportExportProvider'
+import { FakeImportExportProvider } from '@shared/container/providers/ImportExportProvider/fakes/FakeImportExportProvider'
 import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
 import { ExportTransactionsService } from './ExportTransactionsService'
 import { FakeTransactionsRepository } from '../repositories/fakes/FakeTransactionsRepository'
-import { FakeExportProvider } from '@shared/container/providers/ExportProvider/fakes/FakeExportProvider'
 
 let fakeTransactionsRepository: TransactionsRepositoryMethods
-let fakeExportProvider: ExportProvider
+let fakeExportProvider: ImportExportProvider
 let exportTransactionsService: ExportTransactionsService
 
 describe('ExportTransactionsService', () => {
   beforeEach(() => {
     fakeTransactionsRepository = new FakeTransactionsRepository()
-    fakeExportProvider = new FakeExportProvider()
+    fakeExportProvider = new FakeImportExportProvider()
 
     exportTransactionsService = new ExportTransactionsService(
       fakeTransactionsRepository,
