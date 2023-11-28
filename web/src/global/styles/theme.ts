@@ -9,17 +9,22 @@ export const theme = {
       info: { 100: '#999999' },
     },
     background: {
-      default: { 100: '#2C2C2C', 75: '#000000bf' },
+      default: { 100: '#2C2C2C', 75: '#000000BF' },
       dark: { 100: '#222020' },
     },
     text: {
-      default: '#FFF',
+      default: { 100: '#FFF', 50: '#FFFFFF80' },
       placeholder: '#999',
     },
   },
   fonts: {
     family: {
       main: 'Ubuntu',
+    },
+    weight: {
+      bold: 700,
+      medium: 500,
+      regular: 400,
     },
     size: {
       heading: {

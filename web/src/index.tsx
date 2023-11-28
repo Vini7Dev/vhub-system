@@ -2,8 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './global/styles/fonts.css'
-import GlobalStyle from './global/styles'
-import { HomePage } from './pages/HomePage'
+import { App } from './App'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,8 +10,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <HomePage />
-
-    <GlobalStyle />
+    <App />
   </React.StrictMode>
 )

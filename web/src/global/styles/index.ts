@@ -13,7 +13,8 @@ export const GlobalStyle = createGlobalStyle`
     --colors-main-danger-100: ${theme.colors.main.danger[100]};
     --colors-main-info-100: ${theme.colors.main.info[100]};
 
-    --colors-text-default: ${theme.colors.text.default};
+    --colors-text-default-100: ${theme.colors.text.default[100]};
+    --colors-text-default-50: ${theme.colors.text.default[50]};
     --colors-text-placeholder: ${theme.colors.text.placeholder};
 
     --colors-background-default-100: ${theme.colors.background.default[100]};
@@ -22,6 +23,11 @@ export const GlobalStyle = createGlobalStyle`
 
     /* FONT FAMILY */
     --fonts-family-main: ${theme.fonts.family.main};
+
+    /* FONT WEIGHT */
+    --fonts-weight-bold: ${theme.fonts.weight.bold};
+    --fonts-weight-medium: ${theme.fonts.weight.medium};
+    --fonts-weight-regular: ${theme.fonts.weight.regular};
 
     /* FONT SIZE */
     --fonts-size-heading-h1: ${theme.fonts.size.heading.h1};        /* 32px */
@@ -87,6 +93,7 @@ export const GlobalStyle = createGlobalStyle`
   h5,
   h6,
   p,
+  a,
   span,
   strong,
   label,
@@ -95,7 +102,7 @@ export const GlobalStyle = createGlobalStyle`
   select,
   button {
     font-family: var(--fonts-family-main), sans-serif;
-    color: var(--colors-text-default);
+    color: var(--colors-text-default-100);
   }
 
   input::placeholder,
@@ -117,6 +124,10 @@ export const GlobalStyle = createGlobalStyle`
   span,
   td {
     font-size: var(--fonts-size-text-normal);
+  }
+
+  a {
+    text-decoration: none;
   }
 
   input
