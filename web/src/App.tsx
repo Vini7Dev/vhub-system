@@ -9,7 +9,9 @@ export const App: React.FC = () => {
     <>
       <NavigationBar />
 
-      <HomePage />
+      <main>
+        <HomePage />
+      </main>
 
       <GlobalStyle />
     </>

@@ -14,7 +14,7 @@ export const GlobalStyle = createGlobalStyle`
     --colors-main-info-100: ${theme.colors.main.info[100]};
 
     --colors-text-default-100: ${theme.colors.text.default[100]};
-    --colors-text-default-50: ${theme.colors.text.default[50]};
+    --colors-text-default-75: ${theme.colors.text.default[75]};
     --colors-text-placeholder: ${theme.colors.text.placeholder};
 
     --colors-background-default-100: ${theme.colors.background.default[100]};
@@ -74,6 +74,11 @@ export const GlobalStyle = createGlobalStyle`
   body {
     position: relative;
     background: var(--colors-background-default-100);
+  }
+
+  main {
+    margin-top: 5.375rem;
+    padding: 0 1rem;
   }
 
   ::-webkit-scrollbar {

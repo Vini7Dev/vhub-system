@@ -13,7 +13,7 @@ export const theme = {
       dark: { 100: '#222020' },
     },
     text: {
-      default: { 100: '#FFF', 50: '#FFFFFF80' },
+      default: { 100: '#FFF', 75: '#FFFFFFBF' },
       placeholder: '#999',
     },
   },

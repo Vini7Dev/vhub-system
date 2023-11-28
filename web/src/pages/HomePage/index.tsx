@@ -1,5 +1,18 @@
 import React from 'react'
+import { PageTitle } from '../../components/PageTitle'
+
+import * as S from './styles'
 
 export const HomePage: React.FC = () => {
-  return <h1>Hello World!</h1>
+  return (
+    <>
+      <PageTitle title="Início" />
+
+      <S.DashboardContainer>
+        <div />
+        <div />
+        <div />
+      </S.DashboardContainer>
+    </>
+  )
 }
