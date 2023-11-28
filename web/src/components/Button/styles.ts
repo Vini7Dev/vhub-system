@@ -6,8 +6,8 @@ export const ButtonContainer = styled.button<T.ButtonContainerProps>`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 2.5rem;
-  max-width: 18rem;
+  height: ${({ size }) => size === 'normal' ? '3.75rem' : '2.5rem'};
+  max-width: ${({ size }) => size === 'normal' ? '17.5rem' : '18rem'};
   margin: 0 auto;
   text-transform: uppercase;
   font-weight: var(--fonts-weight-medium);

@@ -3,9 +3,15 @@ import React from 'react'
 import * as T from './types'
 import * as S from './styles'
 
-export const Button: React.FC<T.ButtonProps> = ({ color, text, Icon, ...rest }) => {
+export const Button: React.FC<T.ButtonProps> = ({
+  color = 'primary',
+  size = 'normal',
+  text,
+  Icon,
+  ...rest
+}) => {
   return (
-    <S.ButtonContainer color={color} {...rest}>
+    <S.ButtonContainer {...rest} color={color} size={size}>
       {Icon && <Icon size={20} />}
 
       {text}

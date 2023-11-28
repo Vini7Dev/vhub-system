@@ -82,8 +82,8 @@ export const GlobalStyle = createGlobalStyle`
   main {
     width: 100%;
     max-width: 1200px;
-    margin: 5.375rem auto 0;
-    padding: 0 1rem;
+    margin: 0 auto;
+    padding: 5.375rem 1rem 0;
   }
 
   ::-webkit-scrollbar {

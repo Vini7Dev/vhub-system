@@ -1,11 +1,32 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { FiUpload } from 'react-icons/fi'
 
 import { PageTitle } from '../../components/PageTitle'
 import { Button } from '../../components/Button'
+import { Modal } from '../../components/Modal'
 import * as S from './styles'
 
+const ModalContent: React.FC = () => {
+  return (
+    <>
+      <S.SelectFileButton>
+        Selecionar Arquivo
+
+        <input type="file" />
+      </S.SelectFileButton>
+
+      <Button color="tertiary" text="ENVIAR" Icon={FiUpload} />
+    </>
+  )
+}
+
 export const Records: React.FC = () => {
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+
+  const toggleModalIsOpen = useCallback(() => {
+    setModalIsOpen(!modalIsOpen)
+  }, [modalIsOpen])
+
   return (
     <>
       <PageTitle title="Registros" />
@@ -15,7 +36,13 @@ export const Records: React.FC = () => {
         <S.BankSelectorButton>NU BANK</S.BankSelectorButton>
       </S.BankSelectorContainer>
 
-      <Button color="secondary" text="IMPORTAR" Icon={FiUpload} />
+      <Button
+        color="secondary"
+        size="small"
+        text="IMPORTAR"
+        Icon={FiUpload}
+        onClick={toggleModalIsOpen}
+      />
 
       <S.RecordsTable>
         <thead>
@@ -40,6 +67,16 @@ export const Records: React.FC = () => {
           </tr>
         </tbody>
       </S.RecordsTable>
+
+      {
+        modalIsOpen && (
+          <Modal
+            Content={ModalContent}
+            close={toggleModalIsOpen}
+          />
+        )
+      }
+
     </>
   )
 }

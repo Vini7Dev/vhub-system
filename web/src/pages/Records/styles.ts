@@ -95,3 +95,20 @@ export const RecordsTable = styled.table`
   }
 
 `
+
+export const SelectFileButton = styled.label`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3.75rem;
+  width: 100%;
+  max-width: 17.5rem;
+  margin-bottom: 2.375rem;
+  border: 0.063rem solid var(--colors-main-info-100);
+  font-size: var(--fonts-size-button-normal);
+  font-weight: var(--fonts-weight-medium);
+
+  input {
+    display: none;
+  }
+`
