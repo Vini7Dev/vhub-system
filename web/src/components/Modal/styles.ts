@@ -28,8 +28,14 @@ export const ModalContent = styled.div`
   }
 
   & > div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     margin-top: 2rem;
   }
 `
 
-export const ModalOutsideBackground = styled.div``
+export const ModalOutsideBackground = styled.div`
+  width: 100vw;
+  height: 100%;
+`

@@ -1,19 +1,16 @@
 import React, { useCallback, useState } from 'react'
-import { FiUpload } from 'react-icons/fi'
+import { FiFile, FiUpload } from 'react-icons/fi'
 
 import { PageTitle } from '../../components/PageTitle'
 import { Button } from '../../components/Button'
 import { Modal } from '../../components/Modal'
 import * as S from './styles'
+import { FileInput } from '../../components/FileInput'
 
 const ModalContent: React.FC = () => {
   return (
     <>
-      <S.SelectFileButton>
-        Selecionar Arquivo
-
-        <input type="file" />
-      </S.SelectFileButton>
+      <FileInput />
 
       <Button color="tertiary" text="ENVIAR" Icon={FiUpload} />
     </>
@@ -39,31 +36,37 @@ export const Records: React.FC = () => {
       <Button
         color="secondary"
         size="small"
-        text="IMPORTAR"
-        Icon={FiUpload}
+        text="IMPORTAR PDF"
+        Icon={FiFile}
         onClick={toggleModalIsOpen}
       />
 
       <S.RecordsTable>
         <thead>
           <tr>
-            <th className="text_center">Data</th>
-            <th className="text_left">Descrição</th>
-            <th className="text_right">Valor (R$)</th>
+            <th className="text_center small">Data</th>
+            <th className="text_left big">Descrição</th>
+            <th className="text_center small">Valor (R$)</th>
           </tr>
         </thead>
 
         <tbody>
           <tr>
-            <td className="text_center border_success">24/11/2023</td>
-            <td className="text_left border_success">Renda XYZ</td>
-            <td className="text_right border_success text_success">R$ 1000,00</td>
+            <td className="text_center border_success small">24/11/2023</td>
+            <td className="text_left border_success big">Renda XYZ</td>
+            <td className="text_center border_success text_success small">R$ 1000,00</td>
           </tr>
 
           <tr>
-            <td className="text_center border_danger">09/11/2023</td>
-            <td className="text_left border_danger">Panificadora...</td>
-            <td className="text_right border_danger text_danger">R$ -500,00</td>
+            <td className="text_center border_danger small">09/11/2023</td>
+            <td className="text_left border_danger big">Panificadora...</td>
+            <td className="text_center border_danger text_danger small">R$ -19,99</td>
+          </tr>
+
+          <tr>
+            <td className="text_center border_danger small">09/11/2023</td>
+            <td className="text_left border_danger big">Mercado Livre - Guarda Roupas 3/4</td>
+            <td className="text_center border_danger text_danger small">R$ -500,00</td>
           </tr>
         </tbody>
       </S.RecordsTable>
@@ -71,8 +74,9 @@ export const Records: React.FC = () => {
       {
         modalIsOpen && (
           <Modal
-            Content={ModalContent}
+            title="Importar PDF"
             close={toggleModalIsOpen}
+            Content={ModalContent}
           />
         )
       }

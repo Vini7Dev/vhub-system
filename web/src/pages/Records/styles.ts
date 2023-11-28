@@ -28,7 +28,8 @@ export const BankSelectorButton = styled.button<T.BankSelectorButtonProps>`
 
 export const RecordsTable = styled.table`
   width: 100%;
-  margin-top: 0.875rem;
+  max-width: 1000px;
+  margin: 0.875rem auto 0;
   border-collapse: separate;
   border-spacing: 0 0.5em;
 
@@ -38,7 +39,7 @@ export const RecordsTable = styled.table`
 
     th,
     td {
-      padding: 0 0.5rem;
+      padding: 0.5rem;
       background-color: var(--colors-background-dark-100);
       border-bottom: 0.063rem solid var(--colors-main-info-100);
     }
@@ -65,16 +66,22 @@ export const RecordsTable = styled.table`
       color: var(--colors-text-default-75);
     }
 
+    th.small,
+    td.small {
+      width: 25%;
+    }
+
+    th.big,
+    td.big {
+      width: 50%;
+    }
+
     .text_center {
       text-align: center;
     }
 
     .text_left {
       text-align: left;
-    }
-
-    .text_right {
-      text-align: right;
     }
 
     .text_success {
@@ -94,21 +101,12 @@ export const RecordsTable = styled.table`
     }
   }
 
-`
-
-export const SelectFileButton = styled.label`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 3.75rem;
-  width: 100%;
-  max-width: 17.5rem;
-  margin-bottom: 2.375rem;
-  border: 0.063rem solid var(--colors-main-info-100);
-  font-size: var(--fonts-size-button-normal);
-  font-weight: var(--fonts-weight-medium);
-
-  input {
-    display: none;
+  @media screen and (min-width: 768px) {
+    tr th:first-child,
+    tr td:first-child,
+    tr th:last-child,
+    tr td:last-child {
+      padding: 0.5rem 2rem;
+    }
   }
 `

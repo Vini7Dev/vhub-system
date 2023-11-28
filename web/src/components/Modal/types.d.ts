@@ -1,6 +1,7 @@
 import React from 'react'
 
 export interface ModalProps {
-  Content: React.FC
+  title: string
   close: () => void
+  Content: React.FC
 }

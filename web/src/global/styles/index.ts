@@ -77,6 +77,7 @@ export const GlobalStyle = createGlobalStyle`
   body {
     position: relative;
     background: var(--colors-background-default-100);
+    min-height: 100vh;
   }
 
   main {

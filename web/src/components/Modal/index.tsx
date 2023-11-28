@@ -5,7 +5,7 @@ import * as T from './types'
 import * as S from './styles'
 import { theme } from '../../global/styles/theme'
 
-export const Modal: React.FC<T.ModalProps> = ({ Content, close }) => {
+export const Modal: React.FC<T.ModalProps> = ({ title, close, Content }) => {
   const updateBodyScrollIsEnabled = (enabled = false) => {
     document.body.style.overflow = enabled ? 'scroll' : 'hidden'
   }
@@ -22,11 +22,11 @@ export const Modal: React.FC<T.ModalProps> = ({ Content, close }) => {
 
   return (
     <S.ModalContainer>
-      <S.ModalOutsideBackground />
+      <S.ModalOutsideBackground onClick={closeModal} />
 
       <S.ModalContent>
         <header>
-          <h2>Importar</h2>
+          <h2>{title}</h2>
 
           <FiX size={24} color={theme.colors.text.default[100]} onClick={closeModal} />
         </header>
