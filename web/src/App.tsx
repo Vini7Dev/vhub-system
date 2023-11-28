@@ -2,7 +2,8 @@ import React from 'react'
 
 import GlobalStyle from './global/styles'
 import { NavigationBar } from './components/NavigationBar'
-import { HomePage } from './pages/HomePage'
+// import { HomePage } from './pages/HomePage'
+import { Records } from './pages/Records'
 
 export const App: React.FC = () => {
   return (
@@ -10,7 +11,8 @@ export const App: React.FC = () => {
       <NavigationBar />
 
       <main>
-        <HomePage />
+        {/* <HomePage /> */}
+        <Records />
       </main>
 
       <GlobalStyle />

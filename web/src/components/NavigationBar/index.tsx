@@ -7,7 +7,7 @@ export const NavigationBar: React.FC = () => {
     <S.Navigation>
       <S.NavLink href="/" selected>Início</S.NavLink>
 
-      <S.NavLink href="/transactions">Transações</S.NavLink>
+      <S.NavLink href="/records">Registros</S.NavLink>
     </S.Navigation>
   )
 }

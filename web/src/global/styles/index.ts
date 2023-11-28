@@ -17,6 +17,7 @@ export const GlobalStyle = createGlobalStyle`
     --colors-text-default-75: ${theme.colors.text.default[75]};
     --colors-text-placeholder: ${theme.colors.text.placeholder};
 
+    --colors-background-transparent: ${theme.colors.background.transparent};
     --colors-background-default-100: ${theme.colors.background.default[100]};
     --colors-background-default-75: ${theme.colors.background.default[75]};
     --colors-background-dark-100: ${theme.colors.background.dark[100]};
@@ -49,8 +50,10 @@ export const GlobalStyle = createGlobalStyle`
     --icons-size-small: ${theme.icons.size.small};    /* 18px */
 
     /* BORDER RADIUS */
-    --borders-radius-big: ${theme.borders.radius.big};        /* 8px */
-    --borders-radius-normal: ${theme.borders.radius.normal};  /* 4px */
+    --borders-radius-big: ${theme.borders.radius.big.all};                /* 8px */
+    --borders-radius-normal: ${theme.borders.radius.normal.all};          /* 4px */
+    --borders-radius-normal-left: ${theme.borders.radius.normal.left};    /* 4px */
+    --borders-radius-normal-right: ${theme.borders.radius.normal.right};  /* 4px */
   }
 
   * {
@@ -77,7 +80,9 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   main {
-    margin-top: 5.375rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 5.375rem auto 0;
     padding: 0 1rem;
   }
 
@@ -105,7 +110,9 @@ export const GlobalStyle = createGlobalStyle`
   input
   textarea,
   select,
-  button {
+  button,
+  td,
+  th {
     font-family: var(--fonts-family-main), sans-serif;
     color: var(--colors-text-default-100);
   }
@@ -187,7 +194,8 @@ export const GlobalStyle = createGlobalStyle`
 
   table {
     text-indent: 0;
-    border-color: inherit;
+    border-collapse: collapse;
+    border-spacing: 0;
   }
 `
 

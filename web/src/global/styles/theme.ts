@@ -4,11 +4,12 @@ export const theme = {
       primary: { 100: '#006CEC', 50: '#006cec80' },
       secondary: { 100: '#FF8B01' },
       tertiary: { 100: '#9747FF' },
-      success: { 100: '#2C2C2C' },
+      success: { 100: '#33B469' },
       danger: { 100: '#ED3A3A' },
       info: { 100: '#999999' },
     },
     background: {
+      transparent: 'transparent',
       default: { 100: '#2C2C2C', 75: '#000000BF' },
       dark: { 100: '#222020' },
     },
@@ -55,8 +56,12 @@ export const theme = {
   },
   borders: {
     radius: {
-      big: '0.5rem',
-      normal: '0.25rem',
+      big: { all: '0.5rem' },
+      normal: {
+        all: '0.25rem',
+        left: '0.25rem 0 0 0.25rem',
+        right: '0 0.25rem 0.25rem 0',
+      },
     },
   },
 }
