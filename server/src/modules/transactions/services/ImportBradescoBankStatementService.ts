@@ -65,7 +65,8 @@ const getTransactionRowsByPdfContent = (content: string) => {
     { term: ' SALDO ANTERIOR ', index: 10 },
     { term: 'Total ', index: 0 },
     { term: 'Extrato Inexistente.', index: 0 },
-    { term: 'APLICACAO INVESTIMENTOS', index: 0 }
+    { term: 'APLICACAO INVESTIMENTOS', index: 0 },
+    { term: 'RESGATE DE INVESTIMENTOS', index: 0 },
   ]
 
   const contentWithoutMultipleBreakLines = content.replace(MULTIPLE_BREAK_LINES, '')
