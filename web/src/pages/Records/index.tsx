@@ -8,6 +8,8 @@ import * as S from './styles'
 import { FileInput } from '../../components/FileInput'
 import { Select } from '../../components/Select'
 
+const BANK_OPTIONS = ['BRADESCO', 'NU BANK']
+
 const ModalContent: React.FC = () => {
   const [pdfFormat, setPdfFormat] = useState<string>()
   const [pdfToUpdate, setPdfToUpdate] = useState<File>()
@@ -41,18 +43,30 @@ const ModalContent: React.FC = () => {
 
 export const Records: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [selectedBankIndex, setSelectedBankIndex] = useState(0)
 
   const toggleModalIsOpen = useCallback(() => {
     setModalIsOpen(!modalIsOpen)
   }, [modalIsOpen])
+
+  const handleChangeSelectedBank = useCallback((index: number) => {
+    setSelectedBankIndex(index)
+  }, [])
 
   return (
     <>
       <PageTitle title="Registros" />
 
       <S.BankSelectorContainer>
-        <S.BankSelectorButton selected>BRADESCO</S.BankSelectorButton>
-        <S.BankSelectorButton>NU BANK</S.BankSelectorButton>
+        {BANK_OPTIONS.map((bank, index) => (
+          <S.BankSelectorButton
+            key={index}
+            selected={index === selectedBankIndex}
+            onClick={() => handleChangeSelectedBank(index)}
+          >
+            {bank}
+          </S.BankSelectorButton>
+        ))}
       </S.BankSelectorContainer>
 
       <Button
