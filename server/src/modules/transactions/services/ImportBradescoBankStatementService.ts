@@ -91,32 +91,18 @@ const buildTransactionEntityByTransactionDateGroups = (
   for (const date of Object.keys(transactionDateGrups)) {
     const transactionRows = transactionDateGrups[date]
 
-    const investimentRows = transactionRows.filter(
-      row => INVESTIMENTS_ROW_REGEXP.test(row)
-    )
-
-    for (const investimentRow of investimentRows) {
-      const transactionRowSplit = investimentRow.split(' ')
-      const [, valueString] = transactionRowSplit.reverse()
-
-      const description = transactionRowSplit.reverse().slice(0, 4).join(' ')
-      const value = Number(keepOnlyPriceNumbers(valueString))
-
-      transactionEntities.push({
-        date,
-        description,
-        value
-      })
-    }
-
-    const commonTransactionRows = transactionRows.filter(
+    const withoutInvestmentRows = transactionRows.filter(
       row => !INVESTIMENTS_ROW_REGEXP.test(row)
     )
 
-    for (let i = 0; i < commonTransactionRows.length; i += 3) {
-      const description = `${commonTransactionRows[i]} ${commonTransactionRows[i+1]}`
+    for (let i = 0; i < withoutInvestmentRows.length; i += 3) {
+      if (!withoutInvestmentRows[i] || !withoutInvestmentRows[i+1] || !withoutInvestmentRows[i+2]) {
+        continue
+      }
 
-      const [, debitValue, creditString] = commonTransactionRows[i+2].split(' ')
+      const description = `${withoutInvestmentRows[i]} ${withoutInvestmentRows[i+1]}`
+
+      const [, debitValue, creditString] = withoutInvestmentRows[i+2].split(' ')
 
       const value = Number(keepOnlyPriceNumbers(debitValue || creditString))
 

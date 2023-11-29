@@ -150,5 +150,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # database
-/db/dev.db
-/db/prod.db
+db/
+dev/.db
+prod/.db
+*.db
