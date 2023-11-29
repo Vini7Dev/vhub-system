@@ -6,11 +6,33 @@ import { Button } from '../../components/Button'
 import { Modal } from '../../components/Modal'
 import * as S from './styles'
 import { FileInput } from '../../components/FileInput'
+import { Select } from '../../components/Select'
 
 const ModalContent: React.FC = () => {
+  const [pdfFormat, setPdfFormat] = useState<string>()
+  const [pdfToUpdate, setPdfToUpdate] = useState<File>()
+
+  const updatePdfFormat = useCallback((pdfFormatToSet: string) => {
+    setPdfFormat(pdfFormatToSet)
+  }, [])
+
+  const updatePdfFile = useCallback((pdfFileToSet: File) => {
+    setPdfToUpdate(pdfFileToSet)
+  }, [])
+
   return (
     <>
-      <FileInput />
+      <Select
+        id="pdf-format"
+        label="Tipo do PDF*"
+        value={pdfFormat}
+        onChange={updatePdfFormat}
+      />
+
+      <FileInput
+        value={pdfToUpdate?.name}
+        onChange={updatePdfFile}
+      />
 
       <Button color="tertiary" text="ENVIAR" Icon={FiUpload} />
     </>
