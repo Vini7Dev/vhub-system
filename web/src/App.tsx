@@ -2,8 +2,7 @@ import React from 'react'
 
 import GlobalStyle from './global/styles'
 import { NavigationBar } from './components/NavigationBar'
-// import { HomePage } from './pages/HomePage'
-import { Records } from './pages/Records'
+import { Routes } from './routes'
 
 export const App: React.FC = () => {
   return (
@@ -11,8 +10,7 @@ export const App: React.FC = () => {
       <NavigationBar />
 
       <main>
-        {/* <HomePage /> */}
-        <Records />
+        <Routes />
       </main>
 
       <GlobalStyle />
