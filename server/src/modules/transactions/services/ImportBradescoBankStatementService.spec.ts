@@ -32,7 +32,7 @@ describe('ImportBradescoBankStatementService', () => {
   it('should be able to import transactions from a pdf', async () => {
     const readPdfSpy = jest.spyOn(fakePDFReaderProvider, 'readPDF')
 
-    readPdfSpy.mockImplementationOnce(async () => FAKE_BRADESCO_BANK_STATEMENT)
+    readPdfSpy.mockImplementationOnce(async () => [...FAKE_BRADESCO_BANK_STATEMENT])
 
     const insertedCount = await importBradescoBankStatementService.execute({
       file_name: '__example__.pdf',
@@ -48,13 +48,13 @@ describe('ImportBradescoBankStatementService', () => {
 
     const readPdfSpy = jest.spyOn(fakePDFReaderProvider, 'readPDF')
 
-    readPdfSpy.mockImplementationOnce(async () => FAKE_BRADESCO_BANK_STATEMENT)
+    readPdfSpy.mockImplementationOnce(async () => [...FAKE_BRADESCO_BANK_STATEMENT])
 
     const firstInsertedCount = await importBradescoBankStatementService.execute({
       file_name: '__example__.pdf',
     })
 
-    readPdfSpy.mockImplementationOnce(async () => FAKE_BRADESCO_BANK_STATEMENT)
+    readPdfSpy.mockImplementationOnce(async () => [...FAKE_BRADESCO_BANK_STATEMENT])
 
     const secondInsertedCount = await importBradescoBankStatementService.execute({
       file_name: '__example__.pdf',

@@ -1,10 +1,15 @@
-import pdf2html from 'pdf2html'
+import { PdfDataParser } from 'pdf-data-parser'
 
-import { PDFReaderProvider } from '../models/PDFReaderProvider'
+import { PDFPage, PDFReaderProvider } from '../models/PDFReaderProvider'
 
 export class Pdf2HtmlProvider implements PDFReaderProvider {
-  public async readPDF(filePath: string): Promise<string> {
-    const content = await pdf2html.text(filePath)
+  public async readPDF(filePath: string): Promise<PDFPage[]> {
+    const parser = new PdfDataParser({
+      url: filePath,
+      newlines: true,
+    })
+
+    const content = await parser.parse()
 
     return content
   }

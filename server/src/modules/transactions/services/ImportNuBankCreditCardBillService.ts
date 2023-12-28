@@ -1,19 +1,20 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
 import { StorageProvider } from '@shared/container/providers/StorageProvider/models/StorageProvider'
 import { PDFReaderProvider } from '@shared/container/providers/PDFReaderProvider/models/PDFReaderProvider'
-import { TransactionOrigin } from '../infra/prisma/entities/Transaction'
 import { convertBrMonthToMonthNumber } from '@utils/dateHandlers'
-import { keepOnlyPriceNumbers } from '@utils/keepOnlyPriceNumbers'
+import { parseMonetaryStringToIntteger } from '@utils/monetaryHandlers'
+import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
+import { TransactionOrigin } from '../infra/prisma/entities/Transaction'
 
 interface ServiceProps {
+  statementYear: string
   file_name?: string
 }
 
 interface BuildTransactionEntityByRowProps {
   transactionRow: string
-  statementYear: number
+  statementYear: string
 }
 
 interface TransactionProps {
@@ -23,87 +24,44 @@ interface TransactionProps {
   origin: TransactionOrigin
 }
 
-const getStatementYear = (content: string) => {
-  const contentPerRow = content.split('\n')
+type PDFPage = string[]
 
-  const STATEMENT_DATE_LINE_TERM = 'FATURA'
+const getTransactionRowsOnPdfContent = (pdfContentPerPage: PDFPage[]) => {
+  pdfContentPerPage.splice(0, 3)
+  pdfContentPerPage.splice(-1)
 
-  const statementYearRow = contentPerRow.find(
-    row => row.indexOf(STATEMENT_DATE_LINE_TERM) === 0
-  )
+  const onlyTransactions = pdfContentPerPage.map(pageContent => {
+    const pageRows = pageContent[0].split('\n')
 
-  if (!statementYearRow) {
-    return new Date().getFullYear()
-  }
+    pageRows.splice(0, 1)
+    pageRows.splice(-3)
 
-  const [,,,statementYear] = statementYearRow.split(' ')
-
-  return Number(statementYear)
-}
-
-const startsWithTransactionDate = (transactionRow: string) => {
-  const TRANSACTION_DATE_REGEXP = /^(0[1-9]|[12]\d|3[01]) (JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ)$/
-
-  return TRANSACTION_DATE_REGEXP.test(transactionRow.slice(0, 6))
-}
-
-const getTransactionRowsByPdfContent = (content: string) => {
-  const PAGE_DIVISION = '\n\n\n'
-  const UNUSED_BREAK_LINES = / \n \n /g
-  const TRANSACTIONS_START_PAGE_CONTENT = 'TRANSAÇÕES'
-  const PAYMENT_IN_ROW = ' Pagamento em'
-
-  const contentPerPage = content.split(PAGE_DIVISION).map(
-    page => page.replace(UNUSED_BREAK_LINES, '')
-  )
-
-  const transactionPages = contentPerPage.filter(
-    pageContent => pageContent.indexOf(TRANSACTIONS_START_PAGE_CONTENT) === 1
-  )
-
-  const transactionRows = transactionPages.map(transactionPage => {
-    const transactionPageTransactionRows = transactionPage.split('\n')
-
-    return transactionPageTransactionRows
-      .filter(row =>
-        row !== ''
-        && row.indexOf(TRANSACTIONS_START_PAGE_CONTENT) !== 1
-        && row.indexOf(PAYMENT_IN_ROW) === -1
-        && startsWithTransactionDate(row)
-      )
-      .map(row => row.replace(' ', '-'))
+    return pageRows
   }).flat()
 
-  return transactionRows
+  return onlyTransactions
 }
 
 const buildTransactionEntityByRow = ({
   transactionRow,
   statementYear,
 }: BuildTransactionEntityByRowProps): TransactionProps => {
-  const SPACE_BETWEEN_TRANSACTION_SECTIONS = ' '
-  const FIRST_ITEM_INDEX = 0
-  const REMOVE_ONE_ITEM = 1
-  const NEGATIVE_VALUE = -1
+  const transactionsSplit = transactionRow.split(' ')
 
-  const transactionSpaceSplit = transactionRow.split(SPACE_BETWEEN_TRANSACTION_SECTIONS)
-  const [transactionDate] = transactionSpaceSplit.splice(FIRST_ITEM_INDEX, REMOVE_ONE_ITEM)
-  const [transactionValue] = transactionSpaceSplit.splice(transactionSpaceSplit.length-1, REMOVE_ONE_ITEM)
-  const [transactionDay, transactionBrMonth] = transactionDate.split('-')
-  const transactionMonth = convertBrMonthToMonthNumber(transactionBrMonth)
+  const [day, brMonth] = transactionsSplit.splice(0, 2)
+  const [value] = transactionsSplit.splice(-1)
+  const description = transactionsSplit.join(' ')
 
-  const date = new Date(`${statementYear}/${transactionMonth}/${transactionDay}`)
-  const description = transactionSpaceSplit.join(' ')
-  const value = NEGATIVE_VALUE * Number(keepOnlyPriceNumbers(transactionValue))
+  const month = convertBrMonthToMonthNumber(brMonth)
 
-  const transactionData = {
-    description,
-    value,
+  const date = new Date(`${statementYear}/${month}/${day}`)
+
+  return {
     date,
-    origin: TransactionOrigin['NuBank-CreditCard']
+    description,
+    value: parseMonetaryStringToIntteger(`-${value}`),
+    origin: TransactionOrigin['NuBank-CreditCard'],
   }
-
-  return transactionData
 }
 
 @injectable()
@@ -119,18 +77,16 @@ export class ImportNuBankCreditCardBillService {
     private pdfReaderProvider: PDFReaderProvider,
   ) {}
 
-  public async execute({ file_name }: ServiceProps) {
+  public async execute({ file_name, statementYear }: ServiceProps) {
     if (!file_name) return 0
 
     const filePath = await this.storageProvider.saveFile(file_name)
 
-    const content = await this.pdfReaderProvider.readPDF(filePath)
+    const pdfContent = await this.pdfReaderProvider.readPDF(filePath)
 
     await this.storageProvider.deleteFile(file_name)
 
-    const statementYear = getStatementYear(content)
-
-    const transactionRows = getTransactionRowsByPdfContent(content)
+    const transactionRows = getTransactionRowsOnPdfContent(pdfContent)
 
     const transactions = transactionRows.map(transactionRow =>
       buildTransactionEntityByRow({

@@ -1,120 +1,129 @@
 import { inject, injectable } from 'tsyringe'
 
 import { brDateStringToDate } from '@utils/dateHandlers'
-import { keepOnlyPriceNumbers } from '@utils/keepOnlyPriceNumbers'
 import { StorageProvider } from '@shared/container/providers/StorageProvider/models/StorageProvider'
 import { PDFReaderProvider } from '@shared/container/providers/PDFReaderProvider/models/PDFReaderProvider'
 import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
 import { TransactionOrigin } from '../infra/prisma/entities/Transaction'
+import { parseMonetaryStringToIntteger } from '@utils/monetaryHandlers'
 
 interface ServiceProps {
   file_name?: string
 }
 
-interface TransactionDateGroups {
-  [date: string]: string[]
-}
-
 interface TransactionProps {
-  date: string
+  date: Date
   description: string
   value: number
+  origin_type: TransactionOrigin
 }
 
-const groupTransactionsByDate = (transactionRows: string[]) => {
-  const INVESTIMENTS_ROW_REGEXP = /^(RESGATE DE INVESTIMENTOS|APLICACAO INVESTIMENTO)/
+type PDFPage = string[]
 
-  const transactionDateGroups: TransactionDateGroups = {}
-  let currentDateGroup: string | null = null
+const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}/
 
-  for (const transactionRow of transactionRows) {
-    const [firstTransactionRowTerm, ...otherTransactionRowTerms] = transactionRow.split(' ')
+const startsWithDate = (text: string): boolean => {
+  return DATE_REGEX.test(text)
+}
 
-    const isDate = /^\d{2}\/\d{2}\/\d{4}$/.test(firstTransactionRowTerm)
+const textIsNaN = (value: string): boolean => {
+  return Number.isNaN(parseMonetaryStringToIntteger(value))
+}
 
-    if (isDate) {
-      currentDateGroup = firstTransactionRowTerm
-      const otherTransactionRowTerm = otherTransactionRowTerms.join(' ')
+const removeWordsFromText = (
+  text: string,
+  startIndex: number,
+  quantityToRemove?: number
+): string => {
+  const splitedText = text.split(' ')
+  splitedText.splice(startIndex, quantityToRemove)
+  return splitedText.join(' ')
+}
 
-      if (INVESTIMENTS_ROW_REGEXP.test(otherTransactionRowTerm)) {
-        transactionDateGroups[currentDateGroup] = [
-          ...transactionDateGroups[currentDateGroup] ?? [],
-          otherTransactionRowTerm,
-        ]
+const removeTextsFromArray = (
+  array: string[],
+  textToBeRemoved: string,
+  countOfTextsToBeRemoved: number,
+): string[] => {
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const firstTextIndex = array.findIndex(text => text.indexOf(textToBeRemoved) !== -1)
+    if (firstTextIndex === -1) break
+    array.splice(firstTextIndex, countOfTextsToBeRemoved)
+  }
+
+  return array
+}
+
+const getTransactionsOnPdfContent = (pdfContentPerPage: PDFPage[]) => {
+  const groupTransactionsByDate  = (lines: string[]) => {
+    for (let i = 0; i < lines.length; i++) {
+      i += createTransactions(lines.slice(i))
+    }
+  }
+
+  const createTransactions = (lines: string[]): number => {
+    const [date, ...title] = lines[0].split(' ')
+
+    lines[0] = title.join(' ')
+
+    const EMPTY_TRANSACTION = {
+      date: brDateStringToDate(date),
+      description: '',
+      value: 0,
+      origin_type: TransactionOrigin['Bradesco-CP/CC'],
+    }
+
+    let currentTransaction: TransactionProps = { ...EMPTY_TRANSACTION }
+
+    for (let i = 0; i < lines.length; i++) {
+      const text = lines[i]
+
+      if (startsWithDate(text)) return i - 1
+
+      const splitedText = text.split(' ')
+      const maybeBalanceValue = splitedText[splitedText.length-1]
+
+      let isFirstTransactionLine = textIsNaN(maybeBalanceValue)
+
+      if (isFirstTransactionLine) {
+        currentTransaction.description = `${text} - `
+
+        isFirstTransactionLine = false
       } else {
-        transactionDateGroups[currentDateGroup] = [
-          ...transactionDateGroups[currentDateGroup] ?? [],
-        ]
+        const transactionSubtitle = removeWordsFromText(text, -3, 3)
+
+        const textSplitBySpaces = text.split(' ')
+        const value = textSplitBySpaces[textSplitBySpaces.length-2]
+
+        currentTransaction.description = `${currentTransaction.description}${transactionSubtitle}`
+        currentTransaction.value = parseMonetaryStringToIntteger(value)
+
+        transactions.push(currentTransaction)
+
+        currentTransaction = { ...EMPTY_TRANSACTION }
       }
-    } else if (currentDateGroup) {
-      transactionDateGroups[currentDateGroup].push(transactionRow)
     }
+
+    return lines.length
   }
 
-  return transactionDateGroups
-}
+  const pdfFullContent = pdfContentPerPage.join('\n')
 
-const getTransactionRowsByPdfContent = (content: string) => {
-  const MULTIPLE_BREAK_LINES = /\n\n\n/gi
-  const UNUSED_ROW_TERMS = [
-    { term: 'Bradesco Celular', index: 0 },
-    { term: 'Data: ', index: 0 },
-    { term: 'Nome: ', index: 0 },
-    { term: 'Extrato de: ', index: 0 },
-    { term: 'Data Histórico Docto.', index: 0 },
-    { term: ' SALDO ANTERIOR ', index: 10 },
-    { term: 'Total ', index: 0 },
-    { term: 'Extrato Inexistente.', index: 0 },
-    { term: 'APLICACAO INVESTIMENTOS', index: 0 },
-    { term: 'RESGATE DE INVESTIMENTOS', index: 0 },
-  ]
+  let pdfContentLines = pdfFullContent.split('\n')
+  pdfContentLines = removeTextsFromArray(pdfContentLines, 'Bradesco Celular', 5)
+  pdfContentLines = removeTextsFromArray(pdfContentLines, 'Total', 1)
+  pdfContentLines = removeTextsFromArray(pdfContentLines, 'SALDO ANTERIOR', 1)
+  pdfContentLines = pdfContentLines.filter(text => text !== '')
 
-  const contentWithoutMultipleBreakLines = content.replace(MULTIPLE_BREAK_LINES, '')
+  pdfContentLines.slice(0, 1)
+  pdfContentLines.slice(-1)
 
-  const contentRows = contentWithoutMultipleBreakLines.split('\n')
+  const transactions: TransactionProps[] = []
 
-  const filteredContentRows = contentRows.filter(row => (
-    row !== ''
-    && !UNUSED_ROW_TERMS.find(({ term, index }) => row.indexOf(term) === index)
-  ))
+  groupTransactionsByDate(pdfContentLines)
 
-  return filteredContentRows
-}
-
-const buildTransactionEntityByTransactionDateGroups = (
-  transactionDateGrups: TransactionDateGroups
-) => {
-  const INVESTIMENTS_ROW_REGEXP = /^(RESGATE DE INVESTIMENTOS|APLICACAO INVESTIMENTO)/
-
-  const transactionEntities: TransactionProps[] = []
-
-  for (const date of Object.keys(transactionDateGrups)) {
-    const transactionRows = transactionDateGrups[date]
-
-    const withoutInvestmentRows = transactionRows.filter(
-      row => !INVESTIMENTS_ROW_REGEXP.test(row)
-    )
-
-    for (let i = 0; i < withoutInvestmentRows.length; i += 3) {
-      if (!withoutInvestmentRows[i] || !withoutInvestmentRows[i+1] || !withoutInvestmentRows[i+2]) {
-        continue
-      }
-
-      const description = `${withoutInvestmentRows[i]} ${withoutInvestmentRows[i+1]}`
-
-      const [, debitValue, creditString] = withoutInvestmentRows[i+2].split(' ')
-
-      const value = Number(keepOnlyPriceNumbers(debitValue || creditString))
-
-      transactionEntities.push({
-        date,
-        description,
-        value,
-      })
-    }
-  }
-
-  return transactionEntities
+  return transactions
 }
 
 @injectable()
@@ -135,31 +144,20 @@ export class ImportBradescoBankStatementService {
 
     const filePath = await this.storageProvider.saveFile(file_name)
 
-    const content = await this.pdfReaderProvider.readPDF(filePath)
+    const pdfContent = await this.pdfReaderProvider.readPDF(filePath)
 
     await this.storageProvider.deleteFile(file_name)
 
-    const transactionRows = getTransactionRowsByPdfContent(content)
-
-    const transactionByDateGrops = groupTransactionsByDate(transactionRows)
-
-    const transactions = buildTransactionEntityByTransactionDateGroups(transactionByDateGrops)
+    const transactions = getTransactionsOnPdfContent(pdfContent)
 
     let totalOfTransactions = 0
 
     for (const transaction of transactions) {
-      const transactionData = {
-        date: brDateStringToDate(transaction.date),
-        description: transaction.description,
-        value: transaction.value,
-        origin_type: TransactionOrigin['Bradesco-CP/CC']
-      }
-
-      const equalTransaction = await this.transactionsRepository.findEqualTransaction(transactionData)
+      const equalTransaction = await this.transactionsRepository.findEqualTransaction(transaction)
 
       if (equalTransaction) continue
 
-      await this.transactionsRepository.create(transactionData)
+      await this.transactionsRepository.create(transaction)
 
       totalOfTransactions += 1
     }
