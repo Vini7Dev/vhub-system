@@ -131,7 +131,8 @@ export const Records: React.FC = () => {
       <S.RecordsTable>
         <thead>
           <tr>
-            <th className="text_center small">DATA</th>
+            <th className="text_center tiny"></th>
+            <th className="text_center small-b">DATA</th>
             <th className="text_left big">DESCRIÇÃO</th>
             <th className="text_center small">VALOR (R$)</th>
           </tr>
@@ -140,22 +141,31 @@ export const Records: React.FC = () => {
         <tbody>
           {
             loadingTransactions
-              ? <tr><td colSpan={3}>Carregando...</td></tr>
+              ? <tr><td colSpan={4}>Carregando...</td></tr>
               : !transactions?.length
-                ? <tr><td colSpan={3}>Sem registros.</td></tr>
-                : transactions?.map((transaction, idx) => (
-                  <tr key={idx}>
-                    <td className={`text_center border_${transaction.value < 0 ? 'danger' : 'success'} small`}>
-                      {dateStringToLocaleFormat(transaction.date)}
-                    </td>
-                    <td className={`text_left border_${transaction.value < 0 ? 'danger' : 'success'} big`}>
-                      {transaction.description}
-                    </td>
-                    <td className={`text_center border_${transaction.value < 0 ? 'danger' : 'success'} text_${transaction.value < 0 ? 'danger' : 'success'} small`}>
-                      {formatIntegerToBRL(transaction.value)}
-                    </td>
-                  </tr>
-                ))
+                ? <tr><td colSpan={4}>Sem registros.</td></tr>
+                : transactions?.map((transaction, idx) => {
+                  const dangerOrSuccessValue = transaction.value < 0
+                    ? 'danger'
+                    : 'success'
+
+                  return (
+                    <tr key={idx}>
+                      <td className={`text_center border_${dangerOrSuccessValue} tiny`}>
+                        {`${idx + 1}°`}
+                      </td>
+                      <td className={`text_center border_${dangerOrSuccessValue} small-b`}>
+                        {dateStringToLocaleFormat(transaction.date)}
+                      </td>
+                      <td className={`text_left border_${dangerOrSuccessValue} big`}>
+                        {transaction.description}
+                      </td>
+                      <td className={`text_center border_${dangerOrSuccessValue} text_${dangerOrSuccessValue} small`}>
+                        {formatIntegerToBRL(transaction.value)}
+                      </td>
+                    </tr>
+                  )
+                })
           }
         </tbody>
       </S.RecordsTable>

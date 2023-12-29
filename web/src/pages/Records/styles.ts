@@ -83,14 +83,27 @@ export const RecordsTable = styled.table`
       border-radius: var(--borders-radius-normal-right);
     }
 
+    th.tiny,
+    td.tiny {
+      width: 1%;
+      padding: 0 0 0 1rem !important;
+    }
+
     th.small,
     td.small {
-      width: 25%;
+      width: 3%;
+      padding: 0 2rem 0 0 !important;
+    }
+
+    th.small-b,
+    td.small-b {
+      width: 2%;
+      padding: 0 2rem 0 0 !important;
     }
 
     th.big,
     td.big {
-      width: 50%;
+      width: 20%;
     }
 
     .text_center {
@@ -111,6 +124,22 @@ export const RecordsTable = styled.table`
 
     .border_success {
       border-color: var(--colors-main-success-100);
+    }
+
+
+    @media screen and (max-width: 728px) {
+      th:first-child,
+      td:first-child {
+        display: none;
+      }
+
+      th.small,
+      td.small,
+      th.small-b,
+      td.small-b {
+        width: 10%;
+        padding: 0.5rem !important;
+      }
     }
   }
 
