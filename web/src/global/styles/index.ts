@@ -32,14 +32,14 @@ export const GlobalStyle = createGlobalStyle`
 
     /* FONT SIZE */
     --fonts-size-heading-h1: ${theme.fonts.size.heading.h1};        /* 32px */
-    --fonts-size-heading-h2: ${theme.fonts.size.heading.h2};        /* 18px */
+    --fonts-size-heading-h2: ${theme.fonts.size.heading.h2};        /* 24px */
 
     --fonts-size-text-big: ${theme.fonts.size.text.big};            /* 18px */
     --fonts-size-text-normal: ${theme.fonts.size.text.normal};      /* 16px */
     --fonts-size-text-small: ${theme.fonts.size.text.small};        /* 14px */
 
-    --fonts-size-input-label: ${theme.fonts.size.input.label};      /* 14px */
-    --fonts-size-input-text: ${theme.fonts.size.input.text};        /* 16px */
+    --fonts-size-input-label: ${theme.fonts.size.input.label};      /* 16px */
+    --fonts-size-input-text: ${theme.fonts.size.input.text};        /* 18px */
 
     --fonts-size-button-normal: ${theme.fonts.size.button.normal};  /* 18px */
     --fonts-size-button-small: ${theme.fonts.size.button.small};    /* 16px */
@@ -143,7 +143,7 @@ export const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
 
-  input
+  input,
   textarea,
   select {
     font-size: var(--fonts-size-input-text);

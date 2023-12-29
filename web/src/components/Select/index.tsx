@@ -3,7 +3,14 @@ import React, { ChangeEvent, useCallback } from 'react'
 import * as T from './types'
 import * as S from './styles'
 
-export const Select: React.FC<T.SelectProps> = ({ id, label, value, onChange, ...rest }) => {
+export const Select: React.FC<T.SelectProps> = ({
+  id,
+  label,
+  value,
+  options,
+  onChange,
+  ...rest
+}) => {
   const handleSelectValue = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value)
   }, [])
@@ -12,12 +19,12 @@ export const Select: React.FC<T.SelectProps> = ({ id, label, value, onChange, ..
     <S.SelectContainer selected={!!value}>
       <label htmlFor={id}>{label}</label>
 
-      <select {...rest} name={id} id={id} onChange={handleSelectValue}>
+      <select {...rest} id={id} name={id} onChange={handleSelectValue}>
         {!value && <option value="">Selecione</option>}
 
-        <option value="Bradesco-CP/CC">Bradesco - CP/CC</option>
-        <option value="Bradesco-CDI">Bradesco - CDI</option>
-        <option value="NuBank-CreditCard">Nu Bank - Cartão de Crédito</option>
+        {options.map(({ value, text }, idx) => (
+          <option key={idx} value={value}>{text}</option>
+        ))}
       </select>
     </S.SelectContainer>
   )

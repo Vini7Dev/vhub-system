@@ -30,7 +30,7 @@ export const theme = {
     size: {
       heading: {
         h1: '2rem',
-        h2: '1.125rem',
+        h2: '1.5rem',
       },
       text: {
         big: '1.125rem',
@@ -38,8 +38,8 @@ export const theme = {
         small: '0.875rem',
       },
       input: {
-        label: '0.875rem',
-        text: '1rem',
+        label: '1rem',
+        text: '1.125rem',
       },
       button: {
         normal: '1.125rem',

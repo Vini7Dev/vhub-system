@@ -5,13 +5,12 @@ import * as T from './types'
 export const SelectContainer = styled.div<T.SelectContainerProps>`
   position: relative;
   width: 100%;
-  max-width: 17.5rem;
+  max-width: 20rem;
   margin-bottom: 1.75rem;
 
   label {
     position: absolute;
     top: -0.85rem;
-
     color: var(${({ selected }) => selected ? '--colors-text-default-100' : '--colors-text-placeholder'});
   }
 

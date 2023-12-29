@@ -7,12 +7,14 @@ import { Modal } from '../../components/Modal'
 import * as S from './styles'
 import { FileInput } from '../../components/FileInput'
 import { Select } from '../../components/Select'
+import { Input } from '../../components/Input'
 
 const BANK_OPTIONS = ['BRADESCO', 'NU BANK']
 
 const ModalContent: React.FC = () => {
   const [pdfFormat, setPdfFormat] = useState<string>()
   const [pdfToUpdate, setPdfToUpdate] = useState<File>()
+  const [pdfYear, setPdfYear] = useState<string>('')
 
   const updatePdfFormat = useCallback((pdfFormatToSet: string) => {
     setPdfFormat(pdfFormatToSet)
@@ -22,14 +24,38 @@ const ModalContent: React.FC = () => {
     setPdfToUpdate(pdfFileToSet)
   }, [])
 
+  const updatePdfYear = useCallback((pdfYearToSet: string) => {
+    setPdfYear(pdfYearToSet)
+  }, [])
+
   return (
     <>
       <Select
         id="pdf-format"
         label="Tipo do PDF*"
+        options={[
+          { value: 'Bradesco-CP/CC', text: 'Bradesco - CP/CC' },
+          { value: 'Bradesco-CDI', text: 'Bradesco - CDI' },
+          { value: 'NuBank-CreditCard', text: 'Nu Bank - Cartão de Crédito' },
+        ]}
         value={pdfFormat}
         onChange={updatePdfFormat}
       />
+
+      {
+        pdfFormat === 'NuBank-CreditCard' && (
+          <Input
+            id="statement-year"
+            label="Ano da fatura*"
+            value={pdfYear}
+            placeholder={`${new Date().getFullYear()}`}
+            filled={pdfYear.length > 0}
+            type="number"
+            min={1000}
+            onChange={updatePdfYear}
+          />
+        )
+      }
 
       <FileInput
         value={pdfToUpdate?.name}
@@ -116,7 +142,6 @@ export const Records: React.FC = () => {
           />
         )
       }
-
     </>
   )
 }
