@@ -114,6 +114,7 @@ const getTransactionsOnPdfContent = (pdfContentPerPage: PDFPage[]) => {
   pdfContentLines = removeTextsFromArray(pdfContentLines, 'Bradesco Celular', 5)
   pdfContentLines = removeTextsFromArray(pdfContentLines, 'Total', 1)
   pdfContentLines = removeTextsFromArray(pdfContentLines, 'SALDO ANTERIOR', 1)
+  pdfContentLines = removeTextsFromArray(pdfContentLines, 'INVESTIMENTOS', 1)
   pdfContentLines = pdfContentLines.filter(text => text !== '')
 
   pdfContentLines.slice(0, 1)
