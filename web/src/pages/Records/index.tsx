@@ -9,8 +9,9 @@ import { FileInput } from '../../components/FileInput'
 import { Select } from '../../components/Select'
 import { Input } from '../../components/Input'
 import { TransactionOrigin, TransactionProps, apiGetTransactions } from '../../services/api'
-import { dateStringToLocaleFormat } from '../../utils/dateHandlers'
+import { parseDateStringToLocaleFormat, getFirstDayOfMonthInDateFormat, getLastDayOfMonthInDateFormat, parseDateToStringFormat } from '../../utils/dateHandlers'
 import { formatIntegerToBRL } from '../../utils/monetaryHandlers'
+import { DateIntervalInput } from '../../components/DateIntervalInput'
 
 const BANK_OPTIONS = ['BRADESCO', 'NU BANK']
 
@@ -73,22 +74,21 @@ const ModalContent: React.FC = () => {
 export const Records: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [originType, setOriginType] = useState<TransactionOrigin>(0)
-  const [loadingTransactions, setLoadingTransactions] = useState(true)
+  const [fromDate, setFromDate] = useState<Date>(getFirstDayOfMonthInDateFormat())
+  const [toDate, setToDate] = useState<Date>(getLastDayOfMonthInDateFormat())
+
   const [transactions, setTransactions] = useState<TransactionProps[]>()
+  const [loadingTransactions, setLoadingTransactions] = useState(true)
 
   const toggleModalIsOpen = useCallback(() => {
     setModalIsOpen(!modalIsOpen)
   }, [modalIsOpen])
 
-  const handleChangeSelectedBank = useCallback((index: number) => {
-    setOriginType(index)
-  }, [])
-
   const handleGetTransactions = useCallback(async () => {
     setLoadingTransactions(true)
     const { data: transactionsData } = await apiGetTransactions({
-      startDate: '2023-01-01',
-      endDate: '2023-12-31',
+      startDate: parseDateToStringFormat(fromDate),
+      endDate: parseDateToStringFormat(toDate),
       originType,
     })
 
@@ -98,11 +98,11 @@ export const Records: React.FC = () => {
 
     setTransactions(sortTransactions)
     setLoadingTransactions(false)
-  }, [originType])
+  }, [fromDate, toDate, originType])
 
   useEffect(() => {
     handleGetTransactions()
-  }, [originType])
+  }, [fromDate, toDate, originType])
 
   return (
     <>
@@ -114,20 +114,31 @@ export const Records: React.FC = () => {
             key={index}
             selected={index === originType}
             borderRadius={index === 0 ? 'left' : 'right'}
-            onClick={() => handleChangeSelectedBank(index)}
+            onClick={() => setOriginType(index)}
           >
             {bank}
           </S.BankSelectorButton>
         ))}
       </S.BankSelectorContainer>
 
-      <Button
-        color="secondary"
-        size="small"
-        text="IMPORTAR PDF"
-        Icon={FiFile}
-        onClick={toggleModalIsOpen}
-      />
+      <S.ActionsContainer>
+        <DateIntervalInput
+          id="date-interval-filter"
+          fromDateValue={fromDate}
+          toDateValue={toDate}
+          onChangeFromDate={setFromDate}
+          onChangeToDate={setToDate}
+        />
+
+        <Button
+          color="secondary"
+          size="small"
+          text="IMPORTAR PDF"
+          Icon={FiFile}
+          onClick={toggleModalIsOpen}
+        />
+      </S.ActionsContainer>
+
       <S.RecordsTable>
         <thead>
           <tr>
@@ -155,7 +166,7 @@ export const Records: React.FC = () => {
                         {`${idx + 1}°`}
                       </td>
                       <td className={`text_center border_${dangerOrSuccessValue} small-b`}>
-                        {dateStringToLocaleFormat(transaction.date)}
+                        {parseDateStringToLocaleFormat(transaction.date)}
                       </td>
                       <td className={`text_left border_${dangerOrSuccessValue} big`}>
                         {transaction.description}

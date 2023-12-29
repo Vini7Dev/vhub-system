@@ -88,19 +88,19 @@ export const GlobalStyle = createGlobalStyle`
 
   main {
     width: 100%;
-    max-width: 1200px;
+    max-width: 75rem;
     margin: 0 auto;
     padding: 5.375rem 1rem 0;
   }
 
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 0.625rem;
   }
 
   ::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 8px;
-    padding: 1px;
+    border-radius: 0.5rem;
+    padding: 0.063rem;
   }
 
   h1,

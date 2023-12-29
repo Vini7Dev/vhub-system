@@ -21,7 +21,7 @@ export const BankSelectorButton = styled.button<T.BankSelectorButtonProps>`
   text-transform: uppercase;
   color: var(--colors-text-default-100);
   background-color: var(${({ selected }) => selected ? '--colors-main-primary-100' : '--colors-background-transparent'});
-  border: 2px solid var(${({ selected }) => selected ? '--colors-background-transparent' : '--colors-main-primary-100'});
+  border: 0.125rem solid var(${({ selected }) => selected ? '--colors-background-transparent' : '--colors-main-primary-100'});
   border-radius: var(${({ borderRadius }) => borderRadius === 'left'
     ? '--borders-radius-big-left'
     : borderRadius === 'right'
@@ -34,9 +34,28 @@ export const BankSelectorButton = styled.button<T.BankSelectorButtonProps>`
   }
 `
 
+export const ActionsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 62.5rem;
+  margin: 0.875rem auto 0;
+
+  > button {
+    margin: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+`
+
 export const RecordsTable = styled.table`
   width: 100%;
-  max-width: 1000px;
+  max-width: 62.5rem;
   margin: 0.875rem auto 0;
   border-collapse: separate;
   border-spacing: 0 0.5em;
@@ -127,7 +146,7 @@ export const RecordsTable = styled.table`
     }
 
 
-    @media screen and (max-width: 728px) {
+    @media screen and (max-width: 768px) {
       th:first-child,
       td:first-child {
         display: none;
