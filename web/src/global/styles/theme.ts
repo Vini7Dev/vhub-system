@@ -5,13 +5,13 @@ export const theme = {
       secondary: { 100: '#FF8B01' },
       tertiary: { 100: '#9747FF' },
       success: { 100: '#33B469' },
-      danger: { 100: '#ED3A3A' },
+      danger: { 100: '#ED3A3A', 5: '#ED3A3A0D' },
       info: { 100: '#999999' },
     },
     background: {
       transparent: 'transparent',
       default: { 100: '#2C2C2C', 75: '#000000BF' },
-      dark: { 100: '#222020' },
+      dark: { 100: '#222020', 75: '#22202080' },
     },
     text: {
       default: { 100: '#FFF', 80: '#FFFFFFCC', 75: '#FFFFFFBF' },

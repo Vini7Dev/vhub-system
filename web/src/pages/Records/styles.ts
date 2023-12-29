@@ -41,22 +41,35 @@ export const RecordsTable = styled.table`
   border-collapse: separate;
   border-spacing: 0 0.5em;
 
+  thead tr {
+    height: 3rem;
+  }
+
   tbody tr {
+    height: 2.5rem;
     transition: 200ms scale;
 
     &:hover {
-      scale: 1.04;
+      scale: 1.01;
     }
   }
 
   tr {
-    height: 3rem;
-    margin-bottom: 20px;
+    th {
+      padding: 0.5rem;
+      font-weight: var(--fonts-weight-medium);
+      font-size: var(--fonts-size-text-big);
+      color: var(--colors-text-default-100);
+      background-color: var(--colors-main-primary-100);
+      border-bottom: 0.125rem solid var(--colors-text-default-100);
+    }
 
-    th,
     td {
       padding: 0.5rem;
-      background-color: var(--colors-background-dark-100);
+      font-weight: var(--fonts-weight-regular);
+      font-size: var(--fonts-size-text-normal);
+      color: var(--colors-text-default-75);
+      background-color: var(--colors-background-dark-75);
       border-bottom: 0.063rem solid var(--colors-main-info-100);
     }
 
@@ -68,18 +81,6 @@ export const RecordsTable = styled.table`
     th:last-child,
     td:last-child {
       border-radius: var(--borders-radius-normal-right);
-    }
-
-    th {
-      font-weight: var(--fonts-weight-medium);
-      font-size: var(--fonts-size-text-big);
-      color: var(--colors-text-default-100);
-    }
-
-    td {
-      font-weight: var(--fonts-weight-regular);
-      font-size: var(--fonts-size-text-normal);
-      color: var(--colors-text-default-75);
     }
 
     th.small,
@@ -110,10 +111,6 @@ export const RecordsTable = styled.table`
 
     .border_success {
       border-color: var(--colors-main-success-100);
-    }
-
-    .border_danger {
-      border-color: var(--colors-main-danger-100);
     }
   }
 

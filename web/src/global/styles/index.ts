@@ -11,6 +11,7 @@ export const GlobalStyle = createGlobalStyle`
     --colors-main-tertiary-100: ${theme.colors.main.tertiary[100]};
     --colors-main-success-100: ${theme.colors.main.success[100]};
     --colors-main-danger-100: ${theme.colors.main.danger[100]};
+    --colors-main-danger-5: ${theme.colors.main.danger[5]};
     --colors-main-info-100: ${theme.colors.main.info[100]};
 
     --colors-text-default-100: ${theme.colors.text.default[100]};
@@ -22,6 +23,7 @@ export const GlobalStyle = createGlobalStyle`
     --colors-background-default-100: ${theme.colors.background.default[100]};
     --colors-background-default-75: ${theme.colors.background.default[75]};
     --colors-background-dark-100: ${theme.colors.background.dark[100]};
+    --colors-background-dark-75: ${theme.colors.background.dark[75]};
 
     /* FONT FAMILY */
     --fonts-family-main: ${theme.fonts.family.main};
@@ -81,6 +83,7 @@ export const GlobalStyle = createGlobalStyle`
     position: relative;
     background: var(--colors-background-default-100);
     min-height: 100vh;
+    padding-bottom: 4rem;
   }
 
   main {

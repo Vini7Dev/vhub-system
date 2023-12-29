@@ -72,8 +72,9 @@ const ModalContent: React.FC = () => {
 
 export const Records: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [transactions, setTransactions] = useState<TransactionProps[]>()
   const [originType, setOriginType] = useState<TransactionOrigin>(0)
+  const [loadingTransactions, setLoadingTransactions] = useState(true)
+  const [transactions, setTransactions] = useState<TransactionProps[]>()
 
   const toggleModalIsOpen = useCallback(() => {
     setModalIsOpen(!modalIsOpen)
@@ -84,6 +85,7 @@ export const Records: React.FC = () => {
   }, [])
 
   const handleGetTransactions = useCallback(async () => {
+    setLoadingTransactions(true)
     const { data: transactionsData } = await apiGetTransactions({
       startDate: '2023-01-01',
       endDate: '2023-12-31',
@@ -95,6 +97,7 @@ export const Records: React.FC = () => {
     })
 
     setTransactions(sortTransactions)
+    setLoadingTransactions(false)
   }, [originType])
 
   useEffect(() => {
@@ -136,21 +139,23 @@ export const Records: React.FC = () => {
 
         <tbody>
           {
-            !transactions
-              ? 'Carregando...'
-              : transactions?.map((transaction, idx) => (
-                <tr key={idx}>
-                  <td className={`text_center border_${transaction.value < 0 ? 'danger' : 'success'} small`}>
-                    {dateStringToLocaleFormat(transaction.date)}
-                  </td>
-                  <td className={`text_left border_${transaction.value < 0 ? 'danger' : 'success'} big`}>
-                    {transaction.description}
-                  </td>
-                  <td className={`text_center border_${transaction.value < 0 ? 'danger' : 'success'} text_${transaction.value < 0 ? 'danger' : 'success'} small`}>
-                    {formatIntegerToBRL(transaction.value)}
-                  </td>
-                </tr>
-              ))
+            loadingTransactions
+              ? <tr><td colSpan={3}>Carregando...</td></tr>
+              : !transactions?.length
+                ? <tr><td colSpan={3}>Sem registros.</td></tr>
+                : transactions?.map((transaction, idx) => (
+                  <tr key={idx}>
+                    <td className={`text_center border_${transaction.value < 0 ? 'danger' : 'success'} small`}>
+                      {dateStringToLocaleFormat(transaction.date)}
+                    </td>
+                    <td className={`text_left border_${transaction.value < 0 ? 'danger' : 'success'} big`}>
+                      {transaction.description}
+                    </td>
+                    <td className={`text_center border_${transaction.value < 0 ? 'danger' : 'success'} text_${transaction.value < 0 ? 'danger' : 'success'} small`}>
+                      {formatIntegerToBRL(transaction.value)}
+                    </td>
+                  </tr>
+                ))
           }
         </tbody>
       </S.RecordsTable>
