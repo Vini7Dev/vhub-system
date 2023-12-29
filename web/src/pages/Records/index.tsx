@@ -35,7 +35,7 @@ const ModalContent: React.FC = () => {
         label="Tipo do PDF*"
         options={[
           { value: 'Bradesco-CP/CC', text: 'Bradesco - CP/CC' },
-          { value: 'Bradesco-CDI', text: 'Bradesco - CDI' },
+          // { value: 'Bradesco-CDI', text: 'Bradesco - CDI' },
           { value: 'NuBank-CreditCard', text: 'Nu Bank - Cartão de Crédito' },
         ]}
         value={pdfFormat}
@@ -88,6 +88,7 @@ export const Records: React.FC = () => {
           <S.BankSelectorButton
             key={index}
             selected={index === selectedBankIndex}
+            borderRadius={index === 0 ? 'left' : 'right'}
             onClick={() => handleChangeSelectedBank(index)}
           >
             {bank}

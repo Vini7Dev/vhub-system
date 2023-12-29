@@ -19,11 +19,20 @@ export const BankSelectorButton = styled.button<T.BankSelectorButtonProps>`
   width: 100%;
   height: 100%;
   font-weight: var(--fonts-weight-medium);
-  border-radius: var(--borders-radius-big);
   text-transform: uppercase;
-  border: 0.125rem solid var(${({ selected }) => selected ? '--colors-background-dark-100' : '--colors-background-transparent'});
   color: var(${({ selected }) => selected ? '--colors-text-default-100' : '--colors-text-default-75'});
   background-color: var(${({ selected }) => selected ? '--colors-main-primary-100' : '--colors-background-transparent'});
+  border-radius: var(${({ borderRadius }) => borderRadius === 'left'
+    ? '--borders-radius-big-left'
+    : borderRadius === 'right'
+      ? '--borders-radius-big-right'
+      : '--borders-radius-big'});
+  transition: 200ms;
+
+  &:hover {
+    color: var(--colors-text-default-100);
+    background-color: var(--colors-main-primary-100);
+  }
 `
 
 export const RecordsTable = styled.table`

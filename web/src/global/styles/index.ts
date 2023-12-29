@@ -14,6 +14,7 @@ export const GlobalStyle = createGlobalStyle`
     --colors-main-info-100: ${theme.colors.main.info[100]};
 
     --colors-text-default-100: ${theme.colors.text.default[100]};
+    --colors-text-default-80: ${theme.colors.text.default[80]};
     --colors-text-default-75: ${theme.colors.text.default[75]};
     --colors-text-placeholder: ${theme.colors.text.placeholder};
 
@@ -51,6 +52,8 @@ export const GlobalStyle = createGlobalStyle`
 
     /* BORDER RADIUS */
     --borders-radius-big: ${theme.borders.radius.big.all};                /* 8px */
+    --borders-radius-big-left: ${theme.borders.radius.big.left};          /* 8px */
+    --borders-radius-big-right: ${theme.borders.radius.big.right};        /* 8px */
     --borders-radius-normal: ${theme.borders.radius.normal.all};          /* 4px */
     --borders-radius-normal-left: ${theme.borders.radius.normal.left};    /* 4px */
     --borders-radius-normal-right: ${theme.borders.radius.normal.right};  /* 4px */

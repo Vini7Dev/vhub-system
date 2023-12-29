@@ -14,7 +14,7 @@ export const theme = {
       dark: { 100: '#222020' },
     },
     text: {
-      default: { 100: '#FFF', 75: '#FFFFFFBF' },
+      default: { 100: '#FFF', 80: '#FFFFFFCC', 75: '#FFFFFFBF' },
       placeholder: '#999',
     },
   },
@@ -56,7 +56,11 @@ export const theme = {
   },
   borders: {
     radius: {
-      big: { all: '0.5rem' },
+      big: {
+        all: '0.5rem',
+        left: '0.5rem 0 0 0.5rem',
+        right: '0 0.5rem 0.5rem 0',
+      },
       normal: {
         all: '0.25rem',
         left: '0.25rem 0 0 0.25rem',

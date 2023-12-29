@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import * as T from './types'
 
@@ -12,6 +12,7 @@ export const InputContainer = styled.div<T.InputContainerProps>`
     position: absolute;
     top: -0.85rem;
     color: var(${({ filled }) => filled ? '--colors-text-default-100' : '--colors-text-placeholder'});
+    transition: 200ms color;
   }
 
   input {
@@ -21,5 +22,11 @@ export const InputContainer = styled.div<T.InputContainerProps>`
     border-bottom: 0.063rem solid var(--colors-text-placeholder);
     background-color: var(--colors-background-transparent);
     color: var(${({ filled }) => filled ? '--colors-text-default-100' : '--colors-text-placeholder'});
+    transition: 200ms color;
+  }
+
+  &:hover label,
+  &:hover select {
+    ${({ filled }) => !filled && css`color: var(--colors-text-default-80);`}
   }
 `

@@ -19,4 +19,9 @@ export const NavLink = styled.span<T.NavLinkProps>`
   font-weight: var(${({ selected }) => selected ? '--fonts-weight-bold' : '--fonts-weight-medium'});
   font-size: var(--fonts-size-text-big);
   color: var(${({ selected }) => selected ? '--colors-text-default-100' : '--colors-text-default-75'});
+  transition: 200ms color;
+
+  &:hover {
+    color: var(--colors-text-default-100);
+  }
 `
