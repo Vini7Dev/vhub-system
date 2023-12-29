@@ -23,7 +23,7 @@ export class TransactionsRepository implements TransactionsRepositoryMethods {
   }: ListFiltersDTO): Promise<Transaction[]> {
     const filters = { date: {} }
 
-    if (originType) Object.assign(filters, { origin_type: originType })
+    if (originType !== undefined) Object.assign(filters, { origin_type: originType })
 
     if (startDate) Object.assign(filters.date, { gte: startDate })
 

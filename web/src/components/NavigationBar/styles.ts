@@ -12,6 +12,7 @@ export const Navigation = styled.nav`
   align-items: center;
   height: 3.625rem;
   background-color: var(--colors-main-primary-100);
+  z-index: 1;
 `
 
 export const NavLink = styled.span<T.NavLinkProps>`

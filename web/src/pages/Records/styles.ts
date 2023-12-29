@@ -10,7 +10,6 @@ export const BankSelectorContainer = styled.div`
   max-width: 22rem;
   margin: 0 auto 1.25rem;
   border-radius: var(--borders-radius-big);
-  background-color: var(--colors-main-primary-50);
 `
 
 export const BankSelectorButton = styled.button<T.BankSelectorButtonProps>`
@@ -20,8 +19,9 @@ export const BankSelectorButton = styled.button<T.BankSelectorButtonProps>`
   height: 100%;
   font-weight: var(--fonts-weight-medium);
   text-transform: uppercase;
-  color: var(${({ selected }) => selected ? '--colors-text-default-100' : '--colors-text-default-75'});
+  color: var(--colors-text-default-100);
   background-color: var(${({ selected }) => selected ? '--colors-main-primary-100' : '--colors-background-transparent'});
+  border: 2px solid var(${({ selected }) => selected ? '--colors-background-transparent' : '--colors-main-primary-100'});
   border-radius: var(${({ borderRadius }) => borderRadius === 'left'
     ? '--borders-radius-big-left'
     : borderRadius === 'right'
@@ -30,7 +30,6 @@ export const BankSelectorButton = styled.button<T.BankSelectorButtonProps>`
   transition: 200ms;
 
   &:hover {
-    color: var(--colors-text-default-100);
     background-color: var(--colors-main-primary-100);
   }
 `
@@ -41,6 +40,14 @@ export const RecordsTable = styled.table`
   margin: 0.875rem auto 0;
   border-collapse: separate;
   border-spacing: 0 0.5em;
+
+  tbody tr {
+    transition: 200ms scale;
+
+    &:hover {
+      scale: 1.04;
+    }
+  }
 
   tr {
     height: 3rem;

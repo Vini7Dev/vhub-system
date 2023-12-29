@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FiFile, FiUpload } from 'react-icons/fi'
 
 import { PageTitle } from '../../components/PageTitle'
@@ -8,6 +8,9 @@ import * as S from './styles'
 import { FileInput } from '../../components/FileInput'
 import { Select } from '../../components/Select'
 import { Input } from '../../components/Input'
+import { TransactionOrigin, TransactionProps, apiGetTransactions } from '../../services/api'
+import { dateStringToLocaleFormat } from '../../utils/dateHandlers'
+import { formatIntegerToBRL } from '../../utils/monetaryHandlers'
 
 const BANK_OPTIONS = ['BRADESCO', 'NU BANK']
 
@@ -69,15 +72,34 @@ const ModalContent: React.FC = () => {
 
 export const Records: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [selectedBankIndex, setSelectedBankIndex] = useState(0)
+  const [transactions, setTransactions] = useState<TransactionProps[]>()
+  const [originType, setOriginType] = useState<TransactionOrigin>(0)
 
   const toggleModalIsOpen = useCallback(() => {
     setModalIsOpen(!modalIsOpen)
   }, [modalIsOpen])
 
   const handleChangeSelectedBank = useCallback((index: number) => {
-    setSelectedBankIndex(index)
+    setOriginType(index)
   }, [])
+
+  const handleGetTransactions = useCallback(async () => {
+    const { data: transactionsData } = await apiGetTransactions({
+      startDate: '2023-01-01',
+      endDate: '2023-12-31',
+      originType,
+    })
+
+    const sortTransactions = transactionsData.sort((a, b) => {
+      return new Date(a.date).getTime() - new Date(b.date).getTime()
+    })
+
+    setTransactions(sortTransactions)
+  }, [originType])
+
+  useEffect(() => {
+    handleGetTransactions()
+  }, [originType])
 
   return (
     <>
@@ -87,7 +109,7 @@ export const Records: React.FC = () => {
         {BANK_OPTIONS.map((bank, index) => (
           <S.BankSelectorButton
             key={index}
-            selected={index === selectedBankIndex}
+            selected={index === originType}
             borderRadius={index === 0 ? 'left' : 'right'}
             onClick={() => handleChangeSelectedBank(index)}
           >
@@ -103,34 +125,33 @@ export const Records: React.FC = () => {
         Icon={FiFile}
         onClick={toggleModalIsOpen}
       />
-
       <S.RecordsTable>
         <thead>
           <tr>
-            <th className="text_center small">Data</th>
-            <th className="text_left big">Descrição</th>
-            <th className="text_center small">Valor (R$)</th>
+            <th className="text_center small">DATA</th>
+            <th className="text_left big">DESCRIÇÃO</th>
+            <th className="text_center small">VALOR (R$)</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr>
-            <td className="text_center border_success small">24/11/2023</td>
-            <td className="text_left border_success big">Renda XYZ</td>
-            <td className="text_center border_success text_success small">R$ 1000,00</td>
-          </tr>
-
-          <tr>
-            <td className="text_center border_danger small">09/11/2023</td>
-            <td className="text_left border_danger big">Panificadora...</td>
-            <td className="text_center border_danger text_danger small">R$ -19,99</td>
-          </tr>
-
-          <tr>
-            <td className="text_center border_danger small">09/11/2023</td>
-            <td className="text_left border_danger big">Mercado Livre - Guarda Roupas 3/4</td>
-            <td className="text_center border_danger text_danger small">R$ -500,00</td>
-          </tr>
+          {
+            !transactions
+              ? 'Carregando...'
+              : transactions?.map((transaction, idx) => (
+                <tr key={idx}>
+                  <td className={`text_center border_${transaction.value < 0 ? 'danger' : 'success'} small`}>
+                    {dateStringToLocaleFormat(transaction.date)}
+                  </td>
+                  <td className={`text_left border_${transaction.value < 0 ? 'danger' : 'success'} big`}>
+                    {transaction.description}
+                  </td>
+                  <td className={`text_center border_${transaction.value < 0 ? 'danger' : 'success'} text_${transaction.value < 0 ? 'danger' : 'success'} small`}>
+                    {formatIntegerToBRL(transaction.value)}
+                  </td>
+                </tr>
+              ))
+          }
         </tbody>
       </S.RecordsTable>
 
