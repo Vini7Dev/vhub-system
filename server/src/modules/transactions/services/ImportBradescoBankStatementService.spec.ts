@@ -38,7 +38,7 @@ describe('ImportBradescoBankStatementService', () => {
       file_name: '__example__.pdf',
     })
 
-    expect(insertedCount).toBe(8)
+    expect(insertedCount).toBe(5)
   })
 
   it('should not be able to repeat import of transaction', async () => {
@@ -60,7 +60,7 @@ describe('ImportBradescoBankStatementService', () => {
       file_name: '__example__.pdf',
     })
 
-    expect(firstInsertedCount).toBe(8)
+    expect(firstInsertedCount).toBe(5)
     expect(secondInsertedCount).toBe(0)
   })
 

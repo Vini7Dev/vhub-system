@@ -6,6 +6,7 @@ import { convertBrMonthToMonthNumber } from '@utils/dateHandlers'
 import { parseMonetaryStringToIntteger } from '@utils/monetaryHandlers'
 import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
 import { TransactionOrigin } from '../infra/prisma/entities/Transaction'
+import { removeTextsFromArray } from '@utils/removeTextsFromArray'
 
 interface ServiceProps {
   statementYear: string
@@ -21,7 +22,7 @@ interface TransactionProps {
   description: string
   value: number
   date: Date
-  origin: TransactionOrigin
+  origin_type: TransactionOrigin
 }
 
 type PDFPage = string[]
@@ -30,7 +31,7 @@ const getTransactionRowsOnPdfContent = (pdfContentPerPage: PDFPage[]) => {
   pdfContentPerPage.splice(0, 3)
   pdfContentPerPage.splice(-1)
 
-  const onlyTransactions = pdfContentPerPage.map(pageContent => {
+  let onlyTransactions = pdfContentPerPage.map(pageContent => {
     const pageRows = pageContent[0].split('\n')
 
     pageRows.splice(0, 1)
@@ -38,6 +39,8 @@ const getTransactionRowsOnPdfContent = (pdfContentPerPage: PDFPage[]) => {
 
     return pageRows
   }).flat()
+
+  onlyTransactions = removeTextsFromArray(onlyTransactions, 'Pagamento em', 1)
 
   return onlyTransactions
 }
@@ -56,11 +59,15 @@ const buildTransactionEntityByRow = ({
 
   const date = new Date(`${statementYear}/${month}/${day}`)
 
+  const inputOrOutputValue = description.indexOf('Extorno de') === -1
+    ? `-${value}`
+    : value
+
   return {
     date,
     description,
-    value: parseMonetaryStringToIntteger(`-${value}`),
-    origin: TransactionOrigin['NuBank-CreditCard'],
+    value: parseMonetaryStringToIntteger(inputOrOutputValue),
+    origin_type: TransactionOrigin['NuBank-CreditCard'],
   }
 }
 
@@ -95,25 +102,20 @@ export class ImportNuBankCreditCardBillService {
       })
     )
 
-    let totalOfTransactions = 0
+    const nonRepetitiveTransactionsMap = await Promise.all(
+      transactions.map(async transaction => {
+        return this.transactionsRepository.findEqualTransaction(transaction)
+      })
+    )
 
-    for (const transaction of transactions) {
-      const transactionData = {
-        date: transaction.date,
-        description: transaction.description,
-        value: transaction.value,
-        origin_type: TransactionOrigin['NuBank-CreditCard']
-      }
+    const nonRepetitiveTransactions = transactions.filter((_, idx) => {
+      return !nonRepetitiveTransactionsMap[idx]
+    })
 
-      const equalTransaction = await this.transactionsRepository.findEqualTransaction(transactionData)
-
-      if (equalTransaction) continue
-
-      await this.transactionsRepository.create(transactionData)
-
-      totalOfTransactions += 1
+    for (const transaction of nonRepetitiveTransactions) {
+      await this.transactionsRepository.create(transaction)
     }
 
-    return totalOfTransactions
+    return nonRepetitiveTransactions.length
   }
 }

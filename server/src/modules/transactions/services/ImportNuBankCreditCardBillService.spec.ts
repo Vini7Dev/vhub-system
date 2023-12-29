@@ -37,7 +37,7 @@ describe('ImportNuBankCreditCardBillService', () => {
       statementYear: '2023',
     })
 
-    expect(insertedCount).toBe(8)
+    expect(insertedCount).toBe(9)
   })
 
   it('should not be able to repeat import of transaction', async () => {
@@ -57,7 +57,7 @@ describe('ImportNuBankCreditCardBillService', () => {
       statementYear: '2023',
     })
 
-    expect(firstInsertedCount).toBe(8)
+    expect(firstInsertedCount).toBe(9)
     expect(secondInsertedCount).toBe(0)
   })
 

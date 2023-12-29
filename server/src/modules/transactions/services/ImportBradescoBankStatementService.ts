@@ -1,11 +1,12 @@
 import { inject, injectable } from 'tsyringe'
 
+import { parseMonetaryStringToIntteger } from '@utils/monetaryHandlers'
+import { removeTextsFromArray } from '@utils/removeTextsFromArray'
 import { brDateStringToDate } from '@utils/dateHandlers'
 import { StorageProvider } from '@shared/container/providers/StorageProvider/models/StorageProvider'
 import { PDFReaderProvider } from '@shared/container/providers/PDFReaderProvider/models/PDFReaderProvider'
 import { TransactionsRepositoryMethods } from '../repositories/TransactionsRepositoryMethods'
 import { TransactionOrigin } from '../infra/prisma/entities/Transaction'
-import { parseMonetaryStringToIntteger } from '@utils/monetaryHandlers'
 
 interface ServiceProps {
   file_name?: string
@@ -38,21 +39,6 @@ const removeWordsFromText = (
   const splitedText = text.split(' ')
   splitedText.splice(startIndex, quantityToRemove)
   return splitedText.join(' ')
-}
-
-const removeTextsFromArray = (
-  array: string[],
-  textToBeRemoved: string,
-  countOfTextsToBeRemoved: number,
-): string[] => {
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const firstTextIndex = array.findIndex(text => text.indexOf(textToBeRemoved) !== -1)
-    if (firstTextIndex === -1) break
-    array.splice(firstTextIndex, countOfTextsToBeRemoved)
-  }
-
-  return array
 }
 
 const getTransactionsOnPdfContent = (pdfContentPerPage: PDFPage[]) => {
@@ -151,18 +137,20 @@ export class ImportBradescoBankStatementService {
 
     const transactions = getTransactionsOnPdfContent(pdfContent)
 
-    let totalOfTransactions = 0
+    const nonRepetitiveTransactionsMap = await Promise.all(
+      transactions.map(async transaction => {
+        return this.transactionsRepository.findEqualTransaction(transaction)
+      })
+    )
 
-    for (const transaction of transactions) {
-      const equalTransaction = await this.transactionsRepository.findEqualTransaction(transaction)
+    const nonRepetitiveTransactions = transactions.filter((_, idx) => {
+      return !nonRepetitiveTransactionsMap[idx]
+    })
 
-      if (equalTransaction) continue
-
+    for (const transaction of nonRepetitiveTransactions) {
       await this.transactionsRepository.create(transaction)
-
-      totalOfTransactions += 1
     }
 
-    return totalOfTransactions
+    return nonRepetitiveTransactions.length
   }
 }
