@@ -39,12 +39,18 @@ describe('GetTransactionsDashboardService', () => {
 
     const dashboardResponse = await getTransactionsDashboardService.execute({})
 
-    expect(dashboardResponse[TransactionOrigin[0]]['01/2023']).toBe(100)
-    expect(dashboardResponse[TransactionOrigin[0]]['02/2023']).toBe(200)
-    expect(dashboardResponse[TransactionOrigin[0]]['03/2023']).toBe(300)
-    expect(dashboardResponse[TransactionOrigin[1]]['01/2023']).toBe(100)
-    expect(dashboardResponse[TransactionOrigin[1]]['02/2023']).toBe(200)
-    expect(dashboardResponse[TransactionOrigin[1]]['03/2023']).toBe(300)
+    expect(dashboardResponse[TransactionOrigin[0]]['01/2023'].monthSum).toBe(100)
+    expect(dashboardResponse[TransactionOrigin[0]]['02/2023'].monthSum).toBe(200)
+    expect(dashboardResponse[TransactionOrigin[0]]['03/2023'].monthSum).toBe(300)
+    expect(dashboardResponse[TransactionOrigin[1]]['01/2023'].monthSum).toBe(100)
+    expect(dashboardResponse[TransactionOrigin[1]]['02/2023'].monthSum).toBe(200)
+    expect(dashboardResponse[TransactionOrigin[1]]['03/2023'].monthSum).toBe(300)
+    expect(dashboardResponse[TransactionOrigin[0]]['01/2023'].periodSum).toBe(100)
+    expect(dashboardResponse[TransactionOrigin[0]]['02/2023'].periodSum).toBe(300)
+    expect(dashboardResponse[TransactionOrigin[0]]['03/2023'].periodSum).toBe(600)
+    expect(dashboardResponse[TransactionOrigin[1]]['01/2023'].periodSum).toBe(100)
+    expect(dashboardResponse[TransactionOrigin[1]]['02/2023'].periodSum).toBe(300)
+    expect(dashboardResponse[TransactionOrigin[1]]['03/2023'].periodSum).toBe(600)
   })
 
   it('should be able to retrieve transaction dashboard data from the last 6 months', async () => {
@@ -77,10 +83,14 @@ describe('GetTransactionsDashboardService', () => {
 
     expect(dashboardResponse[TransactionOrigin[0]]['01/2023']).toBeUndefined()
     expect(dashboardResponse[TransactionOrigin[1]]['01/2023']).toBeUndefined()
-    expect(dashboardResponse[TransactionOrigin[0]]['02/2023']).toBe(200)
-    expect(dashboardResponse[TransactionOrigin[0]]['03/2023']).toBe(300)
-    expect(dashboardResponse[TransactionOrigin[1]]['02/2023']).toBe(200)
-    expect(dashboardResponse[TransactionOrigin[1]]['03/2023']).toBe(300)
+    expect(dashboardResponse[TransactionOrigin[0]]['02/2023'].monthSum).toBe(200)
+    expect(dashboardResponse[TransactionOrigin[0]]['03/2023'].monthSum).toBe(300)
+    expect(dashboardResponse[TransactionOrigin[1]]['02/2023'].monthSum).toBe(200)
+    expect(dashboardResponse[TransactionOrigin[1]]['03/2023'].monthSum).toBe(300)
+    expect(dashboardResponse[TransactionOrigin[0]]['02/2023'].periodSum).toBe(200)
+    expect(dashboardResponse[TransactionOrigin[0]]['03/2023'].periodSum).toBe(500)
+    expect(dashboardResponse[TransactionOrigin[1]]['02/2023'].periodSum).toBe(200)
+    expect(dashboardResponse[TransactionOrigin[1]]['03/2023'].periodSum).toBe(500)
   })
 
   it('should be able to return an empty response when no transactions exists', async () => {

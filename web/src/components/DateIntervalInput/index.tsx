@@ -18,8 +18,6 @@ export const DateIntervalInput: React.FC<T.InputProps> = ({
   const validateDates = (dateToSet: string, reference: 'from' | 'to') => {
     const dateToSetFormated = parseDateToDateTime(dateToSet)
 
-    console.log('===> dateToSetFormated', dateToSetFormated)
-
     if (reference === 'from' && dateToSetFormated < toDateValue) {
       onChangeFromDate(dateToSetFormated)
       return

@@ -10,8 +10,15 @@ interface ServiceProps {
 
 interface DashboardPerOrigin {
   [transactionOrigin: string]: {
-    [month: string]: number
+    [month: string]: {
+      monthSum: number
+      periodSum: number
+    }
   }
+}
+
+interface PeriodSumPerOrigin {
+  [transactionOrigin: string]: number
 }
 
 @injectable()
@@ -38,6 +45,8 @@ export class GetTransactionsDashboardService {
 
     const transactions = await this.transactionsRepository.list(filters)
 
+    const periodSumPerOrigin: PeriodSumPerOrigin = {}
+
     const dashboardData: DashboardPerOrigin = {}
 
     for (const transaction of transactions) {
@@ -47,17 +56,25 @@ export class GetTransactionsDashboardService {
 
       if (!dashboardData[transactionOrigin]) {
         dashboardData[transactionOrigin] = {}
-
         transactionOriginGroup = dashboardData[transactionOrigin]
+      }
+
+      if (!periodSumPerOrigin[transactionOrigin]) {
+        periodSumPerOrigin[transactionOrigin] = 0
       }
 
       const transactionMonth = getMonthGroup(transaction.date)
 
       if (!transactionOriginGroup[transactionMonth]) {
-        transactionOriginGroup[transactionMonth] = 0
+        transactionOriginGroup[transactionMonth] = {
+          periodSum: periodSumPerOrigin[transactionOrigin],
+          monthSum: 0,
+        }
       }
 
-      transactionOriginGroup[transactionMonth] += transaction.value
+      periodSumPerOrigin[transactionOrigin] += transaction.value
+      transactionOriginGroup[transactionMonth].periodSum = periodSumPerOrigin[transactionOrigin]
+      transactionOriginGroup[transactionMonth].monthSum += transaction.value
 
       dashboardData[transactionOrigin] = transactionOriginGroup
     }
