@@ -2,7 +2,7 @@ import React from 'react'
 
 import GlobalStyle from './global/styles'
 import { NavigationBar } from './components/NavigationBar'
-import { Routes } from './routes'
+import { AppRoutes } from './routes'
 
 export const App: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ export const App: React.FC = () => {
       <NavigationBar />
 
       <main>
-        <Routes />
+        <AppRoutes />
       </main>
 
       <GlobalStyle />

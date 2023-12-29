@@ -1,13 +1,18 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import * as S from './styles'
 
 export const NavigationBar: React.FC = () => {
   return (
     <S.Navigation>
-      <S.NavLink href="/" selected>Início</S.NavLink>
+      <Link to="/">
+        <S.NavLink selected>Início</S.NavLink>
+      </Link>
 
-      <S.NavLink href="/records">Registros</S.NavLink>
+      <Link to="/records">
+        <S.NavLink>Registros</S.NavLink>
+      </Link>
     </S.Navigation>
   )
 }

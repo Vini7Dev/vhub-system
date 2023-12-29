@@ -14,7 +14,7 @@ export const Navigation = styled.nav`
   background-color: var(--colors-main-primary-100);
 `
 
-export const NavLink = styled.a<T.NavLinkProps>`
+export const NavLink = styled.span<T.NavLinkProps>`
   margin: 0 1rem;
   font-weight: var(${({ selected }) => selected ? '--fonts-weight-bold' : '--fonts-weight-medium'});
   font-size: var(--fonts-size-text-big);
